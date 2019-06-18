@@ -1,58 +1,40 @@
 <template>
   <div class="main">
-    <el-row :gutter="20">
-      <el-col :span="17">
-        <h3 class='title'>新建活动
-          <span><i class='must'>*</i> 为必填项</span>
-        </h3>
-      </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple" style='text-align: right;'>
-          <router-link to="nextStep">
-            <el-button type="primary" size="medium">下一步</el-button>
-          </router-link>
-          <router-link to="news" style='margin-left: 10px;'>
-            <el-button size="medium">取消</el-button>
-          </router-link>
-        </div>
-      </el-col>
-    </el-row>
     <div class="content" style="margin-top: 20px;">
-      <el-row>
-        <el-col :span="12">
-          <div class="grid-content bg-purple">
-            <span class="table">活动名称：</span>
-            <el-input v-model="input" placeholder="请输入活动名称" style="width: 70%;"></el-input>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="grid-content bg-purple-light">
-            <span class="table"><i class="must">*</i>活动时间：</span>
-              <el-date-picker
-                v-model="value1"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                style='width: 70%;'>
-              </el-date-picker>
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-row>
+          <el-col :span="12">
+            <h3 class='title'>新建活动
+              <span><i class='must'>*</i> 为必填项</span>
+            </h3>
+          </el-col>
+          <el-col :span="12" style='text-align: right;'>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
+              <el-button @click="resetForm('ruleForm')">取消</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-          </div>
-        </el-col>
-        <el-col :span="24" style='margin-top: 20px;'>
-          <div class="grid-content bg-purple-dark">
-            <span class="table"><i class="must">*</i>活动规则：</span>
-            <el-input
-              type="textarea"
-              :rows="12"
-              placeholder="请输入内容"
-              v-model="textarea"
-              style='width: 70%;'
-            >
-            </el-input>
-          </div>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="活动名称" prop="name">
+              <el-input v-model="ruleForm.name"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="活动时间" required>
+              <el-form-item prop="date1">
+                <el-date-picker type="datetimerange" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+              </el-form-item>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="活动规则" prop="desc">
+          <el-input type="textarea" v-model="ruleForm.desc" :rows="12"></el-input>
+        </el-form-item>
+      </el-form>
     </div>
 
     <el-form>
@@ -97,7 +79,44 @@
           }]
         },
         value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value2: ''
+        value2: '',
+        ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        rules: {
+          name: [
+            {required: true, message: '请输入活动名称', trigger: 'blur'},
+            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          ],
+          date1: [
+            {type: 'date', required: true, message: '请选择日期和时间', trigger: 'change'}
+          ],
+          desc: [
+            {required: true, message: '请填写活动规则', trigger: 'blur'}
+          ]
+        },
+      }
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       }
     }
   }

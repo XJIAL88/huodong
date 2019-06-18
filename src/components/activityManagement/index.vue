@@ -23,8 +23,8 @@
     <el-row style="margin-top: 10px;">
       <el-col :span="24">
         <div class="grid-content bg-purple-dark">
-          <el-form :inline="true" ref="ruleForm" :model="formInline" class="demo-form-inline">
-            <el-form-item label="选择状态">
+          <el-form :inline="true" ref="formInline" :model="formInline" class="demo-form-inline">
+            <el-form-item label="选择状态" prop="region">
               <el-select v-model="formInline.region" placeholder="全部状态">
                 <el-option label="进行中" value="shanghai"></el-option>
                 <el-option label="即将开始" value="beijing"></el-option>
@@ -34,13 +34,13 @@
                 <el-option label="审批中" value="beijing"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="">
+
+            <el-form-item label="" prop='search'>
               <el-input v-model="formInline.search" placeholder="搜索活动名称或活动id"></el-input>
             </el-form-item>
-
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
+              <el-button @click="resetForm('formInline')" >重置</el-button>
             </el-form-item>
           </el-form>
           <div class="tabel">
@@ -215,7 +215,7 @@
         console.log('submit!');
       },
       resetForm(formName) {
-        this.$refs[ruleForm].resetFields();
+        this.$refs[formName].resetFields();
       },
       //页码
       handleSizeChange(val) {
