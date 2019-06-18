@@ -1,4 +1,4 @@
-# ddd
+# 活动管理平台
 
 > A Vue.js project
 
