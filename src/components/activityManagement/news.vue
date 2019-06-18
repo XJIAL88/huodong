@@ -23,10 +23,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="活动时间" required>
-              <el-form-item prop="date1">
-                <el-date-picker type="datetimerange" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
-              </el-form-item>
+            <el-form-item label="活动时间"  prop="date">
+              <el-date-picker v-model="ruleForm.date" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -48,55 +46,18 @@
     name: "news",
     data() {
       return {
-        input: '',
-        value: '',
-        textarea: '',
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
-        value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value2: '',
         ruleForm: {
           name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
+          date: '',
           desc: ''
         },
         rules: {
           name: [
             {required: true, message: '请输入活动名称', trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+            {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
-          date1: [
-            {type: 'date', required: true, message: '请选择日期和时间', trigger: 'change'}
+          date: [
+            { required: true, message: '请选择日期和时间', trigger: 'change'}
           ],
           desc: [
             {required: true, message: '请填写活动规则', trigger: 'blur'}
@@ -109,6 +70,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             alert('submit!');
+            this.$router.replace("/nextStep");
           } else {
             console.log('error submit!!');
             return false;

@@ -4,8 +4,8 @@
       <el-aside width="200px" style='border-right:1px solid #ccc;'>
         <!--侧边栏-->
         <el-col>
-          <el-menu class="el-menu-vertical-demo" style='border: none;'>
-            <el-menu-item index="1">
+          <el-menu :router="true" class="el-menu-vertical-demo" style='border: none;'>
+            <el-menu-item index="/index">
               <span slot="title">资源管理</span>
             </el-menu-item>
             <el-submenu index="2">
@@ -13,9 +13,7 @@
                 <span>活动管理</span>
               </template>
               <el-menu-item-group>
-                <router-link to='index'>
-                  <el-menu-item index="1-1">活动列表</el-menu-item>
-                </router-link>
+                  <el-menu-item index="/index">活动列表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
