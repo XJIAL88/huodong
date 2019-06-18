@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="7">
         <div class="grid-content bg-purple" style='text-align: right;'>
-          <router-link to="home">
+          <router-link to="index">
             <el-button type="primary" size="medium">提交审核</el-button>
           </router-link>
           <router-link to="news" style='margin-left: 10px;'>

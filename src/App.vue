@@ -5,12 +5,9 @@
         <!--侧边栏-->
         <el-col>
           <el-menu class="el-menu-vertical-demo" style='border: none;'>
-           <router-link to='news'>
-             <el-menu-item index="1">
-               <span slot="title">资源管理</span>
-             </el-menu-item>
-
-           </router-link>
+            <el-menu-item index="1">
+              <span slot="title">资源管理</span>
+            </el-menu-item>
             <el-submenu index="2">
               <template slot="title">
                 <span>活动管理</span>
@@ -58,8 +55,8 @@
     name: 'App',
     mounted() {
       let clientW = document.documentElement.clientHeight || document.body.clientHeight,
-          content = document.getElementById('content');
-          content.style.height = clientW + 'px';
+        content = document.getElementById('content');
+      content.style.height = clientW + 'px';
     }
   }
 </script>
@@ -76,17 +73,20 @@
   .right {
     float: right;
   }
-  .left{
+
+  .left {
     float: left;
   }
-  .left h1{
+
+  .left h1 {
     margin-top: 14px;
     font-weight: 400;
     font-style: normal;
     font-size: 22px;
     color: #434343;
   }
-  .pic{
+
+  .pic {
     width: 25px;
     height: 25px;
     border-radius: 50%;

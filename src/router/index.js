@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import index from  '../components/index.vue';
-import news from  '../components/news.vue';
-import nextStep from '../components/nextStep.vue'
+import index from  '../components/activityManagement/index.vue';
+import news from  '../components/activityManagement/news.vue';
+import nextStep from '../components/activityManagement/nextStep.vue'
 
 Vue.use(Router);
 
@@ -11,20 +11,18 @@ export default new Router({
     {
       path: '/',
       component: index,
-      // children:[
-      //   {
-      //     path:'index',
-      //     component: index,
-      //   },
-      //   {
-      //     path:'news',
-      //     component:news,
-      //   },
-      // ]
     },
     {
-      path: 'news',
+      path: '/index',
+      component: index,
+    },
+    {
+      path: '/news',
       component: news,
-    }
+    },
+    {
+      path: '/nextStep',
+      component: nextStep,
+    },
   ]
 })

@@ -19,21 +19,10 @@
         </div>
       </el-col>
     </el-row>
+    <!--主体-->
     <el-row style="margin-top: 10px;">
       <el-col :span="24">
         <div class="grid-content bg-purple-dark">
-          <!--          <el-select v-model="value" placeholder="选择状态">-->
-          <!--            <el-option-->
-          <!--              v-for="item in options"-->
-          <!--              :key="item.value"-->
-          <!--              :label="item.label"-->
-          <!--              :value="item.value">-->
-          <!--            </el-option>-->
-          <!--          </el-select>-->
-          <!--          <el-input v-model="input" placeholder="搜索活动名称或活动id" style="width: inherit; margin:0 20px;"></el-input>-->
-          <!--          <el-button type="primary">查询</el-button>-->
-          <!--          <el-button type="primary">重置查询</el-button>-->
-          <!-- -->
           <el-form :inline="true" ref="ruleForm" :model="formInline" class="demo-form-inline">
             <el-form-item label="选择状态">
               <el-select v-model="formInline.region" placeholder="全部状态">
