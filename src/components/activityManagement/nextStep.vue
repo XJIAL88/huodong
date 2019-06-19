@@ -18,10 +18,16 @@
                     :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <div class="ary">
               <el-table-column prop="a" label="资源类型" width="250">
-                <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
+<!--                <el-select v-model="ruleForm.region" placeholder="请选择活动区域">-->
+<!--                  <el-option label="区域一" value="shanghai" ></el-option>-->
+<!--                  <el-option label="区域二" value="beijing"></el-option>-->
+<!--                </el-select>-->
+                <select v-model="ruleForm.region">
+                  <option value ="volvo">Volvo</option>
+                  <option value ="saab">Saab</option>
+                  <option value="opel">Opel</option>
+                  <option value="audi">Audi</option>
+                </select>
               </el-table-column>
             </div>
             <el-table-column
@@ -55,7 +61,6 @@
             </el-table-column>
           </el-table>
         </el-col>
-
       </el-row>
     </el-form>
   </div>
@@ -111,7 +116,7 @@
           region: '',
           desc: ''
         },
-        rules: {}
+        rules: {},
       }
     },
     methods: {
