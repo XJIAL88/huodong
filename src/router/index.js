@@ -7,6 +7,7 @@ import configuration from '../components/activityManagement/configuration';
 import wanCommunity from '../components/activityManagement/wanCommunity';
 import see from '../components/activityManagement/see.vue';
 import login from '../components/login.vue';
+import home from '../components/home';
 
 Vue.use(Router);
 
@@ -14,31 +15,37 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: index,
-    }, {
-      path: '/index',
-      component: index,
-    }, {
-      path: '/news',
-      component: news,
-    }, {
-      path: '/nextStep',
-      component: nextStep,
-    }, {
-      path: '/configuration',
-      component: configuration,
-    }, {
-      path: '/wanCommunity',
-      component: wanCommunity,
-    }, {
-      path: '/see',
-      component: see,
-    }, {
-      path: '*',
-      component: index,
-    }, {
+      component: home,
+      children:[
+        {
+          path: '/index',
+          component: index,
+        },
+         {
+          path: '/news',
+          component: news,
+        }, {
+          path: '/nextStep',
+          component: nextStep,
+        }, {
+          path: '/configuration',
+          component: configuration,
+        }, {
+          path: '/wanCommunity',
+          component: wanCommunity,
+        }, {
+          path: '/see',
+          component: see,
+        }, 
+      ]
+    }, 
+    {
       path: '/login',
       component: login
+    },
+    {
+      path: '*',
+      component: index,
     },
   ]
 })
