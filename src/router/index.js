@@ -6,6 +6,7 @@ import nextStep from '../components/activityManagement/nextStep.vue';
 import configuration from '../components/activityManagement/configuration';
 import wanCommunity from '../components/activityManagement/wanCommunity';
 import see from '../components/activityManagement/see.vue';
+import login from '../components/login.vue';
 
 Vue.use(Router);
 
@@ -35,6 +36,9 @@ export default new Router({
     }, {
       path: '*',
       component: index,
+    }, {
+      path: '/login',
+      component: login
     },
   ]
 })

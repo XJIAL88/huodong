@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <el-container id='content'>
-      <el-aside width="200px" style='border-right:1px solid #ccc;'>
+      <el-aside width="200px" style='border-right:1px solid #ccc;background:rgb(249, 249, 249);'>
+        <div class="logo">
+          <img src="./assets/clogo.png" alt="" style='width: 134px;'>
+        </div>
         <!--侧边栏-->
         <el-col>
           <el-menu :router="true" class="el-menu-vertical-demo" style='border: none;'>
@@ -13,7 +16,7 @@
                 <span>活动管理</span>
               </template>
               <el-menu-item-group>
-                  <el-menu-item index="/index">活动列表</el-menu-item>
+                <el-menu-item index="/index">活动列表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -21,7 +24,7 @@
       </el-aside>
       <!--主体-->
       <el-container>
-        <el-header>
+        <el-header style=''>
           <div class="main">
             <div class="left">
               <h1>彩之云活动管理平台</h1>
@@ -40,6 +43,7 @@
             </div>
           </div>
         </el-header>
+        <el-divider></el-divider>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -82,6 +86,14 @@
     font-style: normal;
     font-size: 22px;
     color: #434343;
+  }
+
+  .logo {
+    width: 100%;
+    height: 64px;
+    padding: 8px 22px;
+    box-sizing: border-box;
+    background: rgba(38, 78, 129, 1);
   }
 
   .pic {

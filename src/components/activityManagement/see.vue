@@ -89,7 +89,7 @@
           <div class='title'>参与条件：<i>基础条件</i></div>
         </el-col>
         <el-col :span="12">
-          <div class='title'>注册事件：<i>2018-10-24 16:48 - 2018-10-24 16:48</i></div>
+          <div class='title'>注册时间：<i>2018-10-24 16:48 - 2018-10-24 16:48</i></div>
         </el-col>
       </el-row>
       <el-row style='margin-top: 20px;'>
@@ -140,7 +140,7 @@
       </el-row>
       <el-row>
         <el-col :span='24' style='text-align: center; margin-top: 20px;'>
-          <el-button type="primary"><i class="el-icon-circle-plus el-icon--left">增加模块</i></el-button>
+          <el-button type="primary"><i class="el-icon-circle-plus el-icon--left"> 增加模块</i></el-button>
         </el-col>
       </el-row>
     </div>
@@ -228,7 +228,7 @@
     color: #333;
   }
   .picImg{
-    width: 300px;
+    width: 100%;
     height: 200px;
     background: #ccc;
     border-radius: 8px;

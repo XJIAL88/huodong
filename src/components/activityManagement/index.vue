@@ -55,43 +55,51 @@
                 <el-table-column
                   prop="a"
                   label="序列"
+                  align='center'
                   width="80">
                 </el-table-column>
               </div>
               <el-table-column
                 prop="b"
                 label="活动id"
+                align='center'
                 sortable
                 width="200">
               </el-table-column>
               <el-table-column
                 prop="c"
                 label="活动名称"
+                align='center'
                 width="200">
               </el-table-column>
               <el-table-column
                 prop="d"
                 label="开始时间"
+                align='center'
                 width="200">
               </el-table-column>
               <el-table-column
                 prop="e"
                 label="结束时间"
+                align='center'
                 width="200">
               </el-table-column>
               <el-table-column
                 prop="f"
                 label="创建时间"
+                align='center'
                 width="200">
               </el-table-column>
               <el-table-column
                 prop="g"
+                align='center'
                 label="活动状态"
                 width="200">
                 <el-button type="primary" size="mini">{{tableData[0].g}}</el-button>
               </el-table-column>
               <el-table-column
                 fixed="right"
+                align='center'
                 label="操作"
                 width="120">
                 <template slot-scope="scope">
@@ -131,8 +139,15 @@
 </template>
 
 <script>
+  import {getList} from "../../api";
+
   export default {
     name: "home",
+    // async created(){
+    //   //请求接口
+    //    let data = await getList();
+    //    console.log(data);
+    // },
     data() {
       return {
         formInline: {
