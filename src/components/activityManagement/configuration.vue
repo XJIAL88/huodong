@@ -11,10 +11,10 @@
         <el-button type="primary" @click="addModule = true" class="btn">添加</el-button>
         <el-dialog title="模块添加" :visible.sync="addModule" width="30%">
           <el-form :model="form">
-            <el-form-item label="模块名称：" :label-width="addModule" class="module-name">
+            <el-form-item label="模块名称：" :label-width="labelWidth" class="module-name">
               <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit></el-input>
             </el-form-item>
-            <el-form-item label="模块类型：" :label-width="addModule">
+            <el-form-item label="模块类型：" :label-width="labelWidth">
               <el-select v-model="form.region" placeholder="请选择活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
@@ -69,7 +69,7 @@
 					resource: '',
 					desc: ''
 				},
-				formLabelWidth: '120px'
+        labelWidth: '120px'
       }
     }
 	}
@@ -94,8 +94,7 @@
           width: 130px;
         }
         .module-name{
-          display: flex;
-          input{
+          .el-input{
             width: 300px;
           }
         }
