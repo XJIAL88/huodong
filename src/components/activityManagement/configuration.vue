@@ -9,36 +9,29 @@
       <div class="top">
         <span class="title">模块添加</span>
         <el-button type="primary" @click="addModule = true" class="btn">添加</el-button>
-        <el-dialog title="模块添加" :visible.sync="addModule" width="30%">
-          <el-form :model="form">
-            <el-form-item label="模块名称：" :label-width="labelWidth" class="module-name">
-              <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit></el-input>
+        <el-dialog title="模块添加" :visible.sync="addModule" width="25%">
+          <el-form :model="form" :rules="rules">
+            <el-form-item label="模块名称：" :label-width="labelWidth" class="module-name" prop="name">
+              <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit placeholder="请输入模块名称"></el-input>
             </el-form-item>
-            <el-form-item label="模块类型：" :label-width="labelWidth">
-              <el-select v-model="form.region" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+            <el-form-item label="模块类型：" :label-width="labelWidth" prop="region">
+              <el-select v-model="form.region" placeholder="请选择模块类型">
+                <el-option label="领礼包" value="gift"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="addModule = false">取 消</el-button>
-            <el-button type="primary" @click="addModule = false">确 定</el-button>
+            <el-button type="primary" @click="onSubmit(form)">确 定</el-button>
           </div>
         </el-dialog>
       </div>
       <div class="list">
-        <div class="item" @click="$router.push('/wanCommunity')">
+        <div class="item" v-for="(item, index) in lists" :key="index" @click="jump('/wanCommunity',item.name)">
           <div class="item-img">
             <img src="../../assets/u806.png" height="32" width="32"/>
           </div>
-          <span class="item-title">万社区新用户礼包</span>
-        </div>
-        <div class="item">
-          <div class="item-img">
-            <img src="../../assets/u806.png" height="32" width="32"/>
-          </div>
-          <span class="item-title">签到领礼包</span>
+          <span class="item-title">{{item.name}}</span>
         </div>
       </div>
     </div>
@@ -46,33 +39,65 @@
 </template>
 
 <script>
-	export default {
-		data () {
-			return {
-				addModule: false,
+  import PubSub from 'pubsub-js';
+  export default {
+    data () {
+      return {
+        addModule: false,
         text: '',
-				options: [{
-					value: '选项1',
-					label: '黄金糕'
-				}, {
-					value: '选项2',
-					label: '双皮奶'
-				}],
-				value: '',
-				form: {
-					name: '',
-					region: '',
-					date1: '',
-					date2: '',
-					delivery: false,
-					type: [],
-					resource: '',
-					desc: ''
-				},
-        labelWidth: '120px'
+        options: [
+          {
+            value: '选项1',
+            label: '黄金糕'
+          },
+          {
+            value: '选项2',
+            label: '双皮奶'
+          }
+        ],
+        value: '',
+        form: {
+          name: '',
+          region: ''
+        },
+        labelWidth: '120px',
+        rules: {
+          name: [
+            { required: true, message: '请输入模块名称', trigger: 'blur' },
+            { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
+          ],
+          region: [
+            { required: true, message: '请选择模块类型', trigger: 'change' }
+          ]
+        },
+        lists: [
+          {
+            name: '万社区领礼包'
+          },
+          {
+            name: '签到领礼包'
+          }
+        ]
+      }
+    },
+    methods: {
+      jump (path, name) {
+        PubSub.publish('activeName', name);
+        this.$router.push(path);
+      },
+      onSubmit(form) {
+        console.log(form);
+        this.addModule = false;
+        const name = this.form.name;
+        const item = {
+          name,
+        };
+        this.lists.push(item);
+        this.form.name = '';
+        this.form.region = ''
       }
     }
-	}
+  }
 </script>
 
 <style  lang=less>
@@ -95,7 +120,7 @@
         }
         .module-name{
           .el-input{
-            width: 300px;
+            width: 85%;
           }
         }
       }

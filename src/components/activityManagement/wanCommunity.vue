@@ -9,14 +9,16 @@
       <div class="title">
         领礼包
       </div>
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="tab">
+      <el-tabs v-model="activeName" type="card" class="tab" :before-leave="stopTab" @tab-click="handleClick">
         <el-tab-pane label="基础设置" name="first">
-          <baseSet></baseSet>
+          <baseSet :tab="tab"></baseSet>
         </el-tab-pane>
         <el-tab-pane label="参与设置" name="second">
-          <joinSet></joinSet>
+          <joinSet :tab="tab"></joinSet>
         </el-tab-pane>
-        <el-tab-pane label="奖品设置" name="third">奖品设置</el-tab-pane>
+        <el-tab-pane label="奖品设置" name="third">
+          <prizeSet></prizeSet>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -25,66 +27,27 @@
 <script>
   import baseSet from './wanCommunity/baseSet';
   import joinSet from './wanCommunity/joinSet';
+  import prizeSet from './wanCommunity/prizeSet';
   export default {
     components: {
       baseSet,
-      joinSet
+      joinSet,
+      prizeSet
     },
     data() {
       return {
         activeName: 'first',
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        rules: {
-          name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' }
-          ],
-          date1: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-          type: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-          ],
-          resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' }
-          ],
-          desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' }
-          ]
+        stopTab: function (a, b) {
+
         }
       };
     },
     methods: {
-      handleClick(tab, event) {
-        console.log(tab, event);
+      tab (num) {
+        this.activeName = num
       },
-      onSubmit() {
-        console.log('submit!');
+      handleClick(tab, event) {
+
       }
     }
   }

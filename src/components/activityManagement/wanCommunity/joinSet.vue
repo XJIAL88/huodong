@@ -15,7 +15,7 @@
             <br>
             <el-form-item label="注册时间：" label-width="90px">
               <el-date-picker
-                v-model="value"
+                v-model="form.registeredTime"
                 type="daterange"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
@@ -24,10 +24,10 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item label="登录：" label-width="60px">
-              <el-radio-group v-model="form.resource">
+              <el-radio-group v-model="form.loginRadio">
                 <el-radio label="有登录" class="registered"></el-radio>
                 <el-date-picker
-                  v-model="value"
+                  v-model="form.loginTime"
                   type="daterange"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
@@ -36,7 +36,7 @@
                 <br><br><br>
                 <el-radio label="未登录" class="registered"></el-radio>
                 <el-date-picker
-                  v-model="value"
+                  v-model="form.unLoginTime"
                   type="daterange"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
@@ -46,7 +46,7 @@
             </el-form-item>
           </el-form-item>
           <el-form-item label="参与条件：" :label-width="formLabelWidth" prop="resource" class="alertLabel">
-            <el-radio-group v-model="form.resource">
+            <el-radio-group v-model="form.joinConditionRadio">
               <el-radio label="无"></el-radio>
               <el-radio label="签到"></el-radio>
             </el-radio-group>
@@ -72,59 +72,52 @@
       </el-upload>
     </el-form-item>
     <el-form-item label="参与次数：">
-      <el-form-item label="每用户共可参加：" label-width="150px">
-        <el-input-number v-model="num" @change="handleChange" :min="1" :max="10000" label="每用户共可参加：" size="small"></el-input-number>
-      </el-form-item>
-      <el-form-item label="每用户每天可参加：" label-width="150px">
-        <el-input-number v-model="num1" @change="handleChange" :min="1" :max="10000" label="每用户每天可参加：" size="small"></el-input-number>
-      </el-form-item>
-      <el-form-item label="每用户每周可参加：" label-width="150px">
-        <el-input-number v-model="num2" @change="handleChange" :min="1" :max="10000" label="每用户每周可参加：" size="small"></el-input-number>
-      </el-form-item>
+      <el-input placeholder="无限" v-model="allNum">
+        <template slot="prepend">每用户共可参加</template>
+        <template slot="append">次</template>
+      </el-input>
+      <el-input placeholder="无限" v-model="dayNum">
+        <template slot="prepend">每用户每天可参加</template>
+        <template slot="append">次</template>
+      </el-input>
+      <el-input placeholder="无限" v-model="weekNum">
+        <template slot="prepend">每用户没周可参加</template>
+        <template slot="append">次</template>
+      </el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">下一步</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-	export default {
-		name: "joinSet",
+  export default {
+    name: "joinSet",
+    props: ['tab'],
     data () {
-		  return {
+      return {
         rules: {
           resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' }
+            { required: true, message: '请选择参与条件', trigger: 'change' } // 参与条件的校验
           ],
         },
         ruleForm: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          resource: '',  // 参与条件单选按钮
         },
-        fileList: [],
-        joinCondition: false,
+        fileList: [],  // 上传文件
+        joinCondition: false,  // dialog弹出框
         form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          loginRadio: '',  // 登录单选按钮
+          joinConditionRadio: '',  // 参与条件单选按钮
+          registeredTime: '', // 注册时间
+          loginTime: '', // 登录时间
+          unLoginTime: '' // 未登录时间
         },
-        formLabelWidth: '120px',
-        value: '',
-        num: 1,
-        num1: 1,
-        num2: 1,
+        formLabelWidth: '120px', // 弹出框内基础条件和参与条件label的宽度
+        allNum: 1,  // 总次数
+        dayNum: 1,  // 每天次数
+        weekNum: 1,  // 没周次数
       }
     },
     methods: {
@@ -143,11 +136,22 @@
       onSubmit() {
         console.log('submit!');
       },
-      handleChange(value) {
-        console.log(value);
-      }
+      submitForm(formName) {
+        // 订阅消息
+        // PubSub.subscribe('activeName', (msgName, name) => {
+        //   console.log(name);
+        // })
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.tab('third');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
     }
-	}
+  }
 </script>
 
 <style lang="less">
@@ -155,7 +159,7 @@
     margin-bottom: 30px;
   }
   .el-dialog__header{ // 弹窗下划线
-  border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eee;
   }
   .btn{
     margin-top: 20px;
@@ -164,5 +168,8 @@
     font-size: 20px;
     color: #000;
     font-weight: 700;
+  }
+  .el-input{
+    margin-bottom: 20px;
   }
 </style>
