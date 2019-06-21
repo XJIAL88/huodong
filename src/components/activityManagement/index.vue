@@ -26,21 +26,20 @@
           <el-form :inline="true" ref="formInline" :model="formInline" class="demo-form-inline">
             <el-form-item label="选择状态" prop="region">
               <el-select v-model="formInline.region" placeholder="全部状态">
-                <el-option label="进行中" value="shanghai"></el-option>
-                <el-option label="即将开始" value="beijing"></el-option>
-                <el-option label="已下架" value="beijing"></el-option>
-                <el-option label="已失效" value="beijing"></el-option>
-                <el-option label="待配置" value="beijing"></el-option>
-                <el-option label="审批中" value="beijing"></el-option>
+                <el-option label="进行中" value="进行中"></el-option>
+                <el-option label="即将开始" value="即将开始"></el-option>
+                <el-option label="已下架" value="已下架"></el-option>
+                <el-option label="已失效" value="已失效"></el-option>
+                <el-option label="待配置" value="待配置"></el-option>
+                <el-option label="审批中" value="审批中"></el-option>
               </el-select>
             </el-form-item>
-
             <el-form-item label="" prop='search'>
               <el-input v-model="formInline.search" placeholder="搜索活动名称或活动id"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
-              <el-button @click="resetForm('formInline')" >重置</el-button>
+              <el-button type="primary" @click="onSubmit(tableData)">查询</el-button>
+              <el-button @click="resetForm('formInline')">重置</el-button>
             </el-form-item>
           </el-form>
           <div class="tabel">
@@ -60,61 +59,57 @@
                 </el-table-column>
               </div>
               <el-table-column
-                prop="b"
+                prop="id"
                 label="活动id"
                 align='center'
                 sortable
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="c"
+                prop="name"
                 label="活动名称"
                 align='center'
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="d"
+                prop="start_at"
                 label="开始时间"
                 align='center'
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="e"
+                prop="end_at"
                 label="结束时间"
                 align='center'
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="f"
+                prop="create_at"
                 label="创建时间"
                 align='center'
                 width="200">
               </el-table-column>
               <el-table-column
-                prop="g"
+                prop="status"
                 align='center'
                 label="活动状态"
                 width="200">
-                <el-button type="primary" size="mini">{{tableData[0].g}}</el-button>
+
+                <template slot-scope="scope">
+                  <el-tag type="primary" size="mini">{{scope.row.status |statusFil}}</el-tag>
+                </template>
               </el-table-column>
               <el-table-column
+                prop="status"
                 fixed="right"
                 align='center'
                 label="操作"
-                width="120">
-                <template slot-scope="scope">
-                  <el-button
-                    @click.native.prevent="deleteRow(scope.$index, tableData)"
-                    type="text"
-                    size="small">
-                    <i class="el-icon-view"></i>
-                  </el-button>
-                  <el-button
-                    @click.native.prevent="deleteRow(scope.$index, tableData)"
-                    type="text"
-                    size="small">
-                    <i class="el-icon-download"></i>
-                  </el-button>
+                width="250">
+                <template slot-scope="scope" class='btn'>
+                  <el-button size="mini" type="primary" icon="el-icon-view"></el-button>
+                  <el-button size="mini" type="primary" icon="el-icon-upload2" v-show='scope.row.status===5'></el-button>
+                  <el-button size="mini" type="primary" icon="el-icon-download" v-show='scope.row.status===4'></el-button>
+                  <el-button size="mini" type="primary" icon="el-icon-edit" v-show='scope.row.status===5 ||scope.row.status===2'></el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -143,11 +138,12 @@
 
   export default {
     name: "home",
-    // async created(){
-    //   //请求接口
-    //    let data = await getList();
-    //    console.log(data);
-    // },
+    async created() {
+      //请求接口
+      let data = await getList();
+      this.tableData = data.list;
+      console.log(data);
+    },
     data() {
       return {
         formInline: {
@@ -155,52 +151,7 @@
           region: ''
         },
         // 表格
-        tableData: [{
-          id: 1,
-          a: '01',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中'
-        }, {
-          id: 2,
-          a: '02',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中'
-        }, {
-          id: 3,
-          a: '03',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中',
-        }, {
-          id: 4,
-          a: '04',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中',
-          children: [{
-            id: 31,
-            b: 'LW180515002',
-            c: '六一儿童节活动',
-            d: '2018/12/11 18:00:00',
-            e: '2018/12/11 18:00:00',
-            f: '2018/12/11 18:00:00',
-            g: '进行中'
-          }]
-        }],
+        tableData: [],
         //页码
         currentPage1: 1,
         currentPage2: 5,
@@ -212,22 +163,22 @@
       load(tree, treeNode, resolve) {
         setTimeout(() => {
           resolve([
-            {
-              id: 31,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-              id: 32,
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄'
-            }
+            // {
+            //   id: 31,
+            //   date: '2016-05-01',
+            //   name: '王小虎',
+            //   address: '上海市普陀区金沙江路 1519 弄'
+            // }, {
+            //   id: 32,
+            //   date: '2016-05-01',
+            //   name: '王小虎',
+            //   address: '上海市普陀区金沙江路 1519 弄'
+            // }
           ])
         }, 1000)
       },
       onSubmit() {
-        console.log('submit!');
+        console.log('submit');
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
@@ -238,8 +189,29 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+      },
+      filterTag(value, row) {
+        return row.tag === value;
       }
     },
+    filters: {
+      statusFil(tag) {
+        switch (tag) {
+          case 1:
+            return '审批中';
+          case 2:
+            return '待配置';
+          case 3:
+            return '即将开始';
+          case 4:
+            return '进行中';
+          case 5:
+            return '已下架';
+          case 6:
+            return '已失效';
+        }
+      }
+    }
   }
 </script>
 <style scoped>
@@ -250,5 +222,9 @@
 
   .footer {
     margin-top: 40px;
+  }
+
+  .cell button {
+    margin: 4px 0;
   }
 </style>

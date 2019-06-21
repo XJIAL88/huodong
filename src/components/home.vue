@@ -43,7 +43,6 @@
             </div>
           </div>
         </el-header>
-        <el-divider></el-divider>
         <el-main>
           <router-view></router-view>
         </el-main>

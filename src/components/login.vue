@@ -6,17 +6,17 @@
         <div class="login-part">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
             <h4>彩之云活动管理平台</h4>
-            <el-form-item label="" prop="name">
+            <el-form-item label="登录账号" prop="name">
               <el-input v-model="ruleForm.name" placeholder="您的登录名"></el-input>
             </el-form-item>
-            <el-form-item label="" prop="pwd">
+            <el-form-item label="登录密码" prop="pwd">
               <el-input v-model="ruleForm.pwd" placeholder="请输入登录密码" type="password"></el-input>
             </el-form-item>
-            <el-form-item label="" class="remember-me">
-              <el-checkbox v-model="ruleForm.rememberMe" style='color: #fff;'>记住我</el-checkbox>
-            </el-form-item>
+<!--            <el-form-item label="" class="remember-me">-->
+<!--              <el-checkbox v-model="ruleForm.rememberMe" style='color: #fff;'>记住我</el-checkbox>-->
+<!--            </el-form-item>-->
             <el-form-item class="my-btn">
-              <el-button type="primary large" @click="submitForm('ruleForm')" class="login-btn" :loading="loading">登录</el-button>
+              <el-button type="primary large" @click="submitForm('ruleForm')" class="login-btn" :loading="loading" style='width: 100%;'>登录</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -132,11 +132,11 @@
     position: relative;
     width: 1200px;
     margin: 0 auto;
-    height: 600px;
     background-size: 100%;
 
     .login-part {
-      background: #2d3a4b;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 2px 2px 8px #19212b;
       border-radius: 5px;
       padding: 20px 30px;
       width: 400px;
@@ -144,7 +144,7 @@
 
       h4 {
         font-size: 24px;
-        color: #fff;
+        color: #2d3a4b;
         font-weight: 400;
         margin-bottom: 20px;
         text-align: center;
