@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="main">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-row>
@@ -56,11 +57,16 @@
         </el-col>
       </el-row>
     </el-form>
+=======
+  <div class="prize-set">
+    奖品设置
+>>>>>>> fdf611b45b5ec7de5622d1e59248fc0050f9f7aa
   </div>
 </template>
 
 <script>
   export default {
+<<<<<<< HEAD
     name: "prizeSet",
     data() {
       return {
@@ -166,6 +172,9 @@
         }
       },
     }
+=======
+    name: "prizeSet"
+>>>>>>> fdf611b45b5ec7de5622d1e59248fc0050f9f7aa
   }
 </script>
 
