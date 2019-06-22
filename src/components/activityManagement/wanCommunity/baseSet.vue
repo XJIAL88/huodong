@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import PubSub from 'pubsub-js';
+  import {mapState} from 'vuex';
   export default {
     name: "baseSet",
     props: ['tab'],
@@ -39,7 +39,7 @@
           ]
         },
         ruleForm: {
-          name: '',  // 活动名称
+          name: this.activeName,  // 活动名称
           date: '',  // 活动时间
           desc: ''  // 活动规则
         },
@@ -78,24 +78,22 @@
     },
     methods: {
       submitForm(formName) {
-        // 订阅消息
-        // PubSub.subscribe('activeName', (msgName, name) => {
-        //   console.log(name);
-        // })
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.tab('second');
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
       },
     },
     mounted () {
-      setTimeout(() => {
-
-      }, 1000)
+      this.ruleForm.name = this.activeName
+    },
+    computed: {
+      ...mapState({
+        activeName: state => state.configuration.activeName
+      })
     }
   }
 </script>

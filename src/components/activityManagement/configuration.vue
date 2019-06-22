@@ -10,7 +10,7 @@
         <span class="title">模块添加</span>
         <el-button type="primary" @click="addModule = true" class="btn">添加</el-button>
         <el-dialog title="模块添加" :visible.sync="addModule" width="25%">
-          <el-form :model="form" :rules="rules">
+          <el-form :model="form" :rules="rules" ref="form">
             <el-form-item label="模块名称：" :label-width="labelWidth" class="module-name" prop="name">
               <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit placeholder="请输入模块名称"></el-input>
             </el-form-item>
@@ -21,8 +21,8 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="addModule = false">取 消</el-button>
-            <el-button type="primary" @click="onSubmit(form)">确 定</el-button>
+            <el-button  @click="resetForm('form')">取 消</el-button>
+            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
           </div>
         </el-dialog>
       </div>
@@ -39,28 +39,17 @@
 </template>
 
 <script>
-  import PubSub from 'pubsub-js';
+  import {UPDATE_NAME} from "../../vuex/mutation-types";
+
   export default {
     data () {
       return {
-        addModule: false,
-        text: '',
-        options: [
-          {
-            value: '选项1',
-            label: '黄金糕'
-          },
-          {
-            value: '选项2',
-            label: '双皮奶'
-          }
-        ],
-        value: '',
+        addModule: false,  // dialog弹窗
         form: {
-          name: '',
-          region: ''
+          name: '',  // 模块名称
+          region: '' // 模块类型
         },
-        labelWidth: '120px',
+        labelWidth: '120px', // 弹出框label的宽度
         rules: {
           name: [
             { required: true, message: '请输入模块名称', trigger: 'blur' },
@@ -69,7 +58,7 @@
           region: [
             { required: true, message: '请选择模块类型', trigger: 'change' }
           ]
-        },
+        },  // 表单验证规则
         lists: [
           {
             name: '万社区领礼包'
@@ -81,20 +70,31 @@
       }
     },
     methods: {
-      jump (path, name) {
-        PubSub.publish('activeName', name);
+      jump (path, activeName) {
+        this.$store.commit(UPDATE_NAME, activeName);
         this.$router.push(path);
       },
-      onSubmit(form) {
-        console.log(form);
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const { form } = this;
+            this.addModule = false;
+            const name = form.name;
+            const item = {
+              name,
+            };
+            this.lists.push(item);
+            // this.form.name = '';
+            // this.form.region = ''
+            this.$refs[formName].resetFields();
+          } else {
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
         this.addModule = false;
-        const name = this.form.name;
-        const item = {
-          name,
-        };
-        this.lists.push(item);
-        this.form.name = '';
-        this.form.region = ''
+        this.$refs[formName].resetFields();
       }
     }
   }
