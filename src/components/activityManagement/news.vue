@@ -38,6 +38,8 @@
 </template>
 
 <script>
+  import eventBus from "../../bus.js";
+
   export default {
     name: "news",
     data() {
@@ -65,8 +67,10 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            eventBus.$emit('getTarget', this.ruleForm);
             this.$router.replace("/nextStep");
+
+
           } else {
             console.log('error submit!!');
             return false;

@@ -46,8 +46,36 @@
 </template>
 
 <script>
+  // import eventBus from "../../bus.js";
+  import eventBus from "../../bus.js";
+  import {getCategory} from "../../api";
+
   export default {
     name: "nextStep",
+    async created() {
+      let ary = [], obj = {};
+      function p(s) {
+        return s < 10 ? '0' + s : s
+      };
+
+      function beautifyTime(num) {
+        let d = new Date(num + '');
+        const resDate = d.getFullYear() + '-' + p((d.getMonth() + 1)) + '-' + p(d.getDate());
+        const resTime = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+        return resDate + ' ' + resTime;
+      }
+      eventBus.$on('getTarget', target => {
+        obj.name = target.name;
+        obj.start_at = beautifyTime(target.date[0]);
+        obj.end_at = beautifyTime(target.date[1]);
+        obj.rule = target.desc;
+        ary.push(obj);
+      });
+
+      let data = await getCategory();
+      console.log(data);
+
+    },
     data() {
       return {
         tableData: [{
