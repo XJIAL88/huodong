@@ -16,7 +16,9 @@
         <el-tab-pane label="参与设置" name="second">
           <joinSet></joinSet>
         </el-tab-pane>
-        <el-tab-pane label="奖品设置" name="third">奖品设置</el-tab-pane>
+        <el-tab-pane label="奖品设置" name="third">
+          <prizeSet></prizeSet>
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -25,10 +27,12 @@
 <script>
   import baseSet from './wanCommunity/baseSet';
   import joinSet from './wanCommunity/joinSet';
+  import prizeSet from './wanCommunity/prizeSet.vue';
   export default {
     components: {
       baseSet,
-      joinSet
+      joinSet,
+      prizeSet
     },
     data() {
       return {

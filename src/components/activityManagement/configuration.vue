@@ -9,7 +9,8 @@
       <div class="top">
         <span class="title">模块添加</span>
         <el-button type="primary" @click="addModule = true" class="btn">添加</el-button>
-        <el-dialog title="模块添加" :visible.sync="addModule" width="30%">
+
+        <el-dialog title="模块添加" :visible.sync="addModule" width="50%">
           <el-form :model="form">
             <el-form-item label="模块名称：" :label-width="labelWidth" class="module-name">
               <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit></el-input>

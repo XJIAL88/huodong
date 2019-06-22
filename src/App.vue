@@ -16,4 +16,7 @@
    padding: 0;
    margin: 0;
  }
+ .cell{
+   color: #333;
+ }
 </style>

@@ -8,7 +8,7 @@
         <!--侧边栏-->
         <el-col>
           <el-menu :router="true" class="el-menu-vertical-demo" style='border: none;'>
-            <el-menu-item index="/index">
+            <el-menu-item index="/resource">
               <span slot="title">资源管理</span>
             </el-menu-item>
             <el-submenu index="2">

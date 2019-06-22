@@ -5,7 +5,7 @@
       <el-col :span="20">
         <div class="grid-content bg-purple">
           <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item>活动管理</el-breadcrumb-item>
             <el-breadcrumb-item>活动列表</el-breadcrumb-item>
           </el-breadcrumb>
@@ -51,60 +51,19 @@
               default-expand-all
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
               <div class="ary">
-                <el-table-column
-                  prop="a"
-                  label="序列"
-                  align='center'
-                  width="80">
-                </el-table-column>
+                <el-table-column prop="a" label="序列" align='center' width="80"></el-table-column>
               </div>
-              <el-table-column
-                prop="id"
-                label="活动id"
-                align='center'
-                sortable
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="活动名称"
-                align='center'
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="start_at"
-                label="开始时间"
-                align='center'
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="end_at"
-                label="结束时间"
-                align='center'
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="create_at"
-                label="创建时间"
-                align='center'
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="status"
-                align='center'
-                label="活动状态"
-                width="200">
-
+              <el-table-column prop="id" label="活动id" align='center' sortable width="200"></el-table-column>
+              <el-table-column prop="name" label="活动名称" align='center' width="200"></el-table-column>
+              <el-table-column prop="start_at" label="开始时间" align='center' width="200"></el-table-column>
+              <el-table-column prop="end_at" label="结束时间" align='center' width="200"></el-table-column>
+              <el-table-column prop="create_at" label="创建时间" align='center' width="200"></el-table-column>
+              <el-table-column prop="status" align='center' label="活动状态" width="200">
                 <template slot-scope="scope">
                   <el-tag type="primary" size="mini">{{scope.row.status |statusFil}}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="status"
-                fixed="right"
-                align='center'
-                label="操作"
-                width="250">
+              <el-table-column prop="status" fixed="right" align='center' label="操作" width="250">
                 <template slot-scope="scope" class='btn'>
                   <el-button size="mini" type="primary" icon="el-icon-view"></el-button>
                   <el-button size="mini" type="primary" icon="el-icon-upload2" v-show='scope.row.status===5'></el-button>

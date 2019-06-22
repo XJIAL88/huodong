@@ -8,6 +8,7 @@ import wanCommunity from '../components/activityManagement/wanCommunity';
 import see from '../components/activityManagement/see.vue';
 import login from '../components/login.vue';
 import home from '../components/home';
+import resource from '../components/resourceManagement/index.vue';
 
 Vue.use(Router);
 
@@ -36,9 +37,13 @@ export default new Router({
         }, {
           path: '/see',
           component: see,
-        }, 
+        },  {
+          path: '/resource',
+          component: resource,
+        },
       ]
-    }, 
+    },
+
     {
       path: '/login',
       component: login
