@@ -12,20 +12,13 @@ axios.interceptors.response.use(result => result.data.content);
 // };
 
 //=>查看活动
-export let getList = () => {
-  return axios.get("/backend/activity/list", {
-    params: {
-      adminId: '3',
-      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949'
-    },
-  });
-};
+// prizeSet.vue
 
 //=>获取资源列表
-export let getCategory = () => {
-  return axios.get('/backend/category/list/get',{
-    params: {
-      adminId: '3',
-    },
-  })
-};
+// export let getCategory = () => {
+//   return axios.get('/backend/category/list/get',{
+//     params: {
+//       adminId: '3',
+//     },
+//   })
+// };

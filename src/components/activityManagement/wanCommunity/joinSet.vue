@@ -94,7 +94,6 @@
 </template>
 
 <script>
-  import XLSX from 'xlsx';
   export default {
     name: "joinSet",
     props: ['tab'],
