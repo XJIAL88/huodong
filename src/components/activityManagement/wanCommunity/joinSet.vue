@@ -1,11 +1,11 @@
 <template>
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
     <el-form-item label="参与条件：" prop="resource">
-      <el-radio-group v-model="ruleForm.resource">
+      <el-radio-group v-model="ruleForm.resource" @change="limit(ruleForm.resource)">
         <el-radio label="不限制"></el-radio>
         <el-radio label="限制"></el-radio>
       </el-radio-group>
-      <el-button type="primary" class="btn" @click="joinCondition = true">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</el-button>
+      <el-button type="primary" class="btn" @click="joinCondition = true" :disabled="disable">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</el-button>
       <!--对话框-->
       <el-dialog title="参与条件：" :visible.sync="joinCondition">
         <el-form :model="form" :rules="rules" ref="form">
@@ -59,8 +59,8 @@
     <el-form-item label="参与用户组：">
       <el-upload
         class="upload-demo"
-        accept="excel/xls,excel/xlsx"
-        action="#"
+        accept="text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        action="https://etivities-czytest.colourlife.com/backend/user/package/upload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :before-remove="beforeRemove"
@@ -70,7 +70,7 @@
         :on-exceed="handleExceed"
         :file-list="fileList">
         <el-button type="primary">点击上传<i class="el-icon-upload el-icon--right"></i></el-button>
-        <div slot="tip" class="el-upload__tip">只能上传Excel文件，且不超过2MB</div>
+        <div slot="tip" class="el-upload__tip">一次不超过2万个手机号， 只允许上传.xlsx、.csv后缀的文件</div>
       </el-upload>
     </el-form-item>
     <el-form-item label="参与次数：">
@@ -123,6 +123,7 @@
         allNum: 1,  // 总次数
         dayNum: 1,  // 每天次数
         weekNum: 1,  // 没周次数
+        disable: false,  // 添加按钮的使用与禁用
       }
     },
     methods: {
@@ -139,16 +140,16 @@
         return this.$confirm(`确定移除 ${ file.name }吗？`);
       },
       beforeUpload(file) {
-        const isExcel = file.type === '.xls/.xlsx';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isExcel) {
-          this.$message.error('上传头像图片只能是 Excel 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isExcel && isLt2M;
+        // const isExcel = file.type === '.xlsx';
+        // const isLt2M = file.size / 1024 / 1024 < 2;
+        //
+        // if (!isExcel) {
+        //   this.$message.error('上传头像图片只能是 Excel 格式!');
+        // }
+        // if (!isLt2M) {
+        //   this.$message.error('上传头像图片大小不能超过 2MB!');
+        // }
+        // return isExcel && isLt2M;
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -172,7 +173,14 @@
       resetForm(formName) {
         this.joinCondition = false;
         this.$refs[formName].resetFields();
-      }  // 取消
+      },  // 取消
+      limit(type) {
+        if (type === '不限制') {
+          this.disable = true
+        } else {
+          this.disable = false
+        }
+      }
     }
   }
 </script>

@@ -15,7 +15,7 @@
               <el-input v-model="form.name" autocomplete="off" type="text" maxlength="15" show-word-limit placeholder="请输入模块名称"></el-input>
             </el-form-item>
             <el-form-item label="模块类型：" :label-width="labelWidth" prop="region">
-              <el-select v-model="form.region" placeholder="请选择模块类型">
+              <el-select v-model="form.moduleType" placeholder="请选择模块类型">
                 <el-option label="领礼包" value="gift"></el-option>
               </el-select>
             </el-form-item>
@@ -27,7 +27,7 @@
         </el-dialog>
       </div>
       <div class="list">
-        <div class="item" v-for="(item, index) in lists" :key="index" @click="jump('/wanCommunity',item.name)">
+        <div class="item" v-for="(item, index) in activeModuleLists" :key="index" @click="jump('/wanCommunity',item.name)">
           <div class="item-img">
             <img src="../../assets/u806.png" height="32" width="32"/>
           </div>
@@ -40,6 +40,8 @@
 
 <script>
   import {UPDATE_NAME} from "../../vuex/mutation-types";
+  import {mapState} from 'vuex';
+  import {reqCreateActiveModule} from "../../api/api";
 
   export default {
     data () {
@@ -47,7 +49,7 @@
         addModule: false,  // dialog弹窗
         form: {
           name: '',  // 模块名称
-          region: '' // 模块类型
+          moduleType: '' // 模块类型
         },
         labelWidth: '120px', // 弹出框label的宽度
         rules: {
@@ -55,18 +57,10 @@
             { required: true, message: '请输入模块名称', trigger: 'blur' },
             { min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
           ],
-          region: [
+          moduleType: [
             { required: true, message: '请选择模块类型', trigger: 'change' }
           ]
         },  // 表单验证规则
-        lists: [
-          {
-            name: '万社区领礼包'
-          },
-          {
-            name: '签到领礼包'
-          }
-        ]
       }
     },
     methods: {
@@ -80,12 +74,8 @@
             const { form } = this;
             this.addModule = false;
             const name = form.name;
-            const item = {
-              name,
-            };
-            this.lists.push(item);
-            // this.form.name = '';
-            // this.form.region = ''
+            const moduleType = form.moduleType;
+            this.createActiveModule(79, name, moduleType);
             this.$refs[formName].resetFields();
           } else {
             return false;
@@ -95,7 +85,18 @@
       resetForm(formName) {
         this.addModule = false;
         this.$refs[formName].resetFields();
+      },
+      createActiveModule (activeId, name, typeId) {
+        reqCreateActiveModule(activeId, name, typeId)
       }
+    },
+    created() {
+      this.$store.dispatch('getActiveModuleLists')
+    },
+    computed: {
+      ...mapState({
+        activeModuleLists : state => state.configuration.activeModuleLists
+      })
     }
   }
 </script>
