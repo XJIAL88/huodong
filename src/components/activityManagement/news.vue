@@ -23,7 +23,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="活动时间"  prop="date">
+            <el-form-item label="活动时间" prop="date">
               <el-date-picker v-model="ruleForm.date" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -55,7 +55,7 @@
             {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
           ],
           date: [
-            { required: true, message: '请选择日期和时间', trigger: 'change'}
+            {required: true, message: '请选择日期和时间', trigger: 'change'}
           ],
           desc: [
             {required: true, message: '请填写活动规则', trigger: 'blur'}
@@ -67,10 +67,8 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            eventBus.$emit('getTarget', this.ruleForm);
+            // eventBus.$emit('getTarget', this.ruleForm);
             this.$router.replace("/nextStep");
-
-
           } else {
             console.log('error submit!!');
             return false;
@@ -79,6 +77,29 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      }
+    },
+    watch: {
+      ruleForm: {
+        handler() {
+
+          function p(s) {
+            return s < 10 ? '0' + s : s
+          };
+
+          function beautifyTime(num) {
+            let d = new Date(num + '');
+            const resDate = d.getFullYear() + '-' + p((d.getMonth() + 1)) + '-' + p(d.getDate());
+            const resTime = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+            return resDate + ' ' + resTime;
+          }
+
+          this.ruleForm.start_at=beautifyTime(this.ruleForm.date[0]);
+          this.ruleForm.end_at=beautifyTime(this.ruleForm.date[1]);
+
+          localStorage.setItem('newData', JSON.stringify(this.ruleForm));
+        },
+        deep: true
       }
     }
   }

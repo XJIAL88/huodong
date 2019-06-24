@@ -114,15 +114,8 @@
 </template>
 
 <script>
-  import batten from '../base/batten.vue';
-  import page from '../base/page.vue';
-
   export default {
     name: "home",
-    components: {
-      batten,
-      page
-    },
     data() {
       return {
         formInline: {

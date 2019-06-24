@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
           <h3 class='title'>新建活动
@@ -14,24 +14,40 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <div class="title">资源调用</div>
-          <el-table :data="tableData" style="width: 100%;height: 100%" max-height="500" row-key="id" default-expand-all
-                    :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-            <el-table-column prop="select" label="资源类型" width="250" align="center">
+          <div class="title" style='margin-bottom: 20px;'>资源调用</div>
+          <el-table border :data="tableData" stripe style="width: 100%;height: 100%;" max-width='1200' max-height="500">
+            <el-table-column prop="categoryId" label="资源类型" width="350" align="center">
               <template slot-scope="scope">
-                <el-cascader :options="options" v-model="scope.row.select"></el-cascader>
+                <el-cascader
+                  :options="categoryList"
+                  v-model="scope.row.categoryId"
+                  @change="changeCategory(scope.row)"
+                  :props="props"
+                  :show-all-levels="false"
+                ></el-cascader>
               </template>
             </el-table-column>
-            <el-table-column prop="b" label="对应资源id" align='center' sortable width="250">
-            </el-table-column>
-            <el-table-column prop="c" label="资源名称" align='center' width="250">
-            </el-table-column>
-            <el-table-column prop="d" label="数量" align='center' width="150">
+            <el-table-column prop="name" label="资源名称" width="350" align="center">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.d" placeholder="请输入" type="number"></el-input>
+                <el-select
+                  v-model="scope.row.label"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in scope.row.resourceList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" align='center' width="150">
+            <el-table-column prop="num" label="数量" align='center' width="350">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.number" placeholder="请输入" type="number" style='width: 60%;'></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align='center' width="150">
               <template slot-scope="scope">
                 <el-button @click.native.prevent="deleteRow(scope.$index, tableData)" type="text" size="small">
                   删除
@@ -40,117 +56,121 @@
             </el-table-column>
           </el-table>
         </el-col>
+        <el-col :span="24" style='margin-top: 20px;'>
+          <el-button @click="addItem" type="primary">添加资源</el-button>
+        </el-col>
       </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
-  // import eventBus from "../../bus.js";
   import eventBus from "../../bus.js";
-  import {getCategory} from "../../api";
+  import {create, getCategory, getResource} from "../../api";
 
   export default {
     name: "nextStep",
-    async created() {
+    created() {
       let ary = [], obj = {};
-      function p(s) {
-        return s < 10 ? '0' + s : s
-      };
 
-      function beautifyTime(num) {
-        let d = new Date(num + '');
-        const resDate = d.getFullYear() + '-' + p((d.getMonth() + 1)) + '-' + p(d.getDate());
-        const resTime = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
-        return resDate + ' ' + resTime;
-      }
-      eventBus.$on('getTarget', target => {
-        obj.name = target.name;
-        obj.start_at = beautifyTime(target.date[0]);
-        obj.end_at = beautifyTime(target.date[1]);
-        obj.rule = target.desc;
-        ary.push(obj);
-      });
+      // function p(s) {
+      //   return s < 10 ? '0' + s : s
+      // };
+      //
+      // function beautifyTime(num) {
+      //   let d = new Date(num + '');
+      //   const resDate = d.getFullYear() + '-' + p((d.getMonth() + 1)) + '-' + p(d.getDate());
+      //   const resTime = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+      //   return resDate + ' ' + resTime;
+      // }
+      //
+      // eventBus.$on('getTarget', target => {
+      //   obj.name = target.name;
+      //   obj.start_at = beautifyTime(target.date[0]);
+      //   obj.end_at = beautifyTime(target.date[1]);
+      //   obj.rule = target.desc;
+      //   obj.resource = 'd';
+      //   ary.push(obj);
+      //   this.table = obj;
+      //   console.log(obj);
+      // });
 
-      let data = await getCategory();
-      console.log(data);
+      this.getcategoryList();
+      // this.createList(ary);
 
     },
     data() {
       return {
-        tableData: [{
-          id: 1,
-          a: '01',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中',
-          select: ''
-        }, {
-          id: 2,
-          a: '02',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中'
-        }, {
-          id: 3,
-          a: '03',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中',
-        }, {
-          id: 4,
-          a: '04',
-          b: 'LW180515002',
-          c: '五一粽子节活动',
-          d: '2018/12/11 18:00:00',
-          e: '2018/12/11 18:00:00',
-          f: '2018/12/11 18:00:00',
-          g: '进行中',
-        }],
         value: [],
-        input: '',
+        categoryList: [],
+        tableData: [],
+        table: [],
         ruleForm: {
           name: '',
           date: '',
           region: '',
           desc: ''
         },
-        rules: {},
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        props: {
+          label: "title",
+          value: "id",
+          children: "son"
+        },
       }
     },
     methods: {
+      addItem() {
+        let obj = {
+          categoryId: [],
+          category: "",
+          number: "",
+          name: '',
+          resourceList: [],
+          resourceId: "",
+          resourceName: "",
+          grantType: 1
+        };
+        this.tableData.push(obj);
+      },
+
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
-            this.$router.replace("/index");
+            let newData = JSON.parse(localStorage.getItem('newData'));
+            let result = [], obj = {}, ary = this.tableData, arys = [],resource=[];
+            ary.forEach(item => {
+              let obj = {}, length = item.categoryId.length, num = item.label;
+              let val = length > 1 ? item.categoryId[length - 1] : item.categoryId;
+              obj.number = item.number;
+              obj.categoryId = val;
+              if (item.resourceList[num]) {
+                let cat = item.resourceList[num].category.split("_");
+                cat = cat.slice(cat.length - 2, cat.length - 1).toString();
+                obj.category = cat;
+                obj.grantType = item.resourceList[num].grantType;
+                obj.resourceName = item.resourceList[num].label;
+                obj.resourceId = item.resourceList[num].resourceId;
+              }
+              arys.push(obj);
+            });
+            console.log(arys);
+            arys.forEach(item => {
+              resource.push(JSON.stringify(item));
+            });
+
+            let a = newData.name,
+              b = newData.start_at,
+              c = newData.end_at,
+              d = newData.desc,
+              e = JSON.stringify(resource);
+            console.log(newData);
+
+            this.createList(a, b, c, d, e);
+            // this.$router.replace("/index");
+            // this.$message({message: '提交审核成功！', type: 'success'});
+
           } else {
-            console.log('error submit!!');
+            this.$message.error('提交审核失败！');
             return false;
           }
         });
@@ -160,8 +180,49 @@
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
+      },
+
+      //=>获取id
+      changeCategory(value) {
+        let length = value.categoryId.length;
+        let val = length > 1 ? value.categoryId[length - 1] : value.categoryId[0];
+        this.getResource(val);
+      },
+
+      // ======接口请求======
+
+      //=>创建活动
+      async createList(a, b, c, d, e) {
+        let data = await create(a, b, c, d, e);
+        console.log(data);
+      },
+
+      //=>获取资源类型列表
+      async getcategoryList() {
+        let data = await getCategory();
+        this.categoryList = data.content.dataList;
+      },
+
+      //=>获取资源列表
+      async getResource(num) {
+        let data = await getResource(num);
+        console.log(data);
+        let arys = [];
+        let ary = data.content.dataList;
+        ary.forEach((item, index) => {
+          let obj = {};
+          obj.label = item.name;
+          obj.category = item.category;
+          obj.resourceId = item.id;
+          obj.grantType = item.grantType;
+          obj.value = index;
+          arys.push(obj);
+        });
+        this.tableData[this.tableData.length - 1].resourceList = arys;
+        console.log(data);
       }
-    }
+
+    },
   }
 </script>
 
@@ -197,6 +258,10 @@
   .select {
     width: 150px;
     border: none;
+  }
+
+  .el-input el-input--suffix {
+    margin-bottom: 0;
   }
 </style>
 

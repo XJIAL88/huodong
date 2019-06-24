@@ -65,7 +65,7 @@
               </el-table-column>
               <el-table-column prop="status" fixed="right" align='center' label="操作" width="250">
                 <template slot-scope="scope" class='btn'>
-                  <el-button size="mini" type="primary" icon="el-icon-view"></el-button>
+                  <el-button size="mini" type="primary" icon="el-icon-view" @click='see'></el-button>
                   <el-button size="mini" type="primary" icon="el-icon-upload2" v-show='scope.row.status===5'></el-button>
                   <el-button size="mini" type="primary" icon="el-icon-download" v-show='scope.row.status===4'></el-button>
                   <el-button size="mini" type="primary" icon="el-icon-edit" v-show='scope.row.status===5 ||scope.row.status===2'></el-button>
@@ -97,11 +97,8 @@
 
   export default {
     name: "home",
-    async created() {
-      //请求接口
-      let data = await getList();
-      this.tableData = data.list;
-      console.log(data);
+    created() {
+      this.getList();
     },
     data() {
       return {
@@ -151,6 +148,15 @@
       },
       filterTag(value, row) {
         return row.tag === value;
+      },
+      see() {
+        this.$router.replace('/see');
+      },
+      //=>获取列表
+      async getList() {
+        let data = await getList();
+        // this.tableData = data.list;
+        console.log(data);
       }
     },
     filters: {
