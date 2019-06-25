@@ -77,6 +77,7 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+        this.$router.replace("/index");
       }
     },
     watch: {
@@ -96,7 +97,6 @@
 
           this.ruleForm.start_at=beautifyTime(this.ruleForm.date[0]);
           this.ruleForm.end_at=beautifyTime(this.ruleForm.date[1]);
-
           localStorage.setItem('newData', JSON.stringify(this.ruleForm));
         },
         deep: true

@@ -8,7 +8,7 @@ export let getList = () => {
   return axios.get('/backend/activity/list', {
       params: {
         adminId: '3',
-        adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949'
+        adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
       }
     }
   );

@@ -3,29 +3,46 @@
     <div class="content" style="margin-top: 20px;">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <h3 class='title'>资源管理</h3>
           </el-col>
-          <el-col :span="12" style='text-align: right;'>
-            <el-form-item>
-              <el-button type="primary" @click="dialogFormVisible = true">新增奖品</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span='6'>
-            <el-input placeholder="搜索资源/活动名称或ID" suffix-icon='el-icon-search' v-model="input"></el-input>
-          </el-col>
+          <tamplate v-show='false'>
+            <el-col :span="12" style='text-align: right;'>
+              <el-form-item>
+                <el-button type="primary" @click="dialogFormVisible = true">新增奖品</el-button>
+              </el-form-item>
+            </el-col>
+            <el-col :span='6'>
+              <el-input placeholder="搜索资源/活动名称或ID" suffix-icon='el-icon-search' v-model="input"></el-input>
+            </el-col>
+          </tamplate>
+
+
+
+          <tamplate>
+            <el-col :span='6'>
+              <el-input placeholder="搜索资源/活动名称或ID" suffix-icon='el-icon-search' v-model="input"></el-input>
+            </el-col>
+            <el-col :span="6" style='text-align: right;'>
+                <el-cascader v-model="value" :options="options" @change="handleChange"></el-cascader>
+            </el-col>
+
+          </tamplate>
+
           <el-col :span='24' style="margin-top: 20px;">
-              <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="奖品列表" name="first">用户管理</el-tab-pane>
-                <el-tab-pane label="资源列表" name="second">配置管理</el-tab-pane>
-              </el-tabs>
+            <!--@tab-click="handleClick"-->
+            <el-tabs v-model="activeName">
+              <el-tab-pane label="奖品列表" name="first">用户管理</el-tab-pane>
+              <el-tab-pane label="资源列表" name="second">配置管理</el-tab-pane>
+            </el-tabs>
           </el-col>
         </el-row>
       </el-form>
     </div>
 
-    <el-dialog title="新建奖品" :visible.sync="dialogFormVisible">
 
+    <!--新建奖品模态框-->
+    <el-dialog title="新建奖品" :visible.sync="dialogFormVisible">
       <el-row>
         <el-col :span='12'>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
@@ -221,7 +238,8 @@
     height: 178px;
     display: block;
   }
-  .cell{
+
+  .cell {
     color: #333;
   }
 </style>

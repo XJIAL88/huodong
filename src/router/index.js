@@ -29,8 +29,9 @@ export default new Router({
           path: '/nextStep',
           component: nextStep,
         }, {
-          path: '/configuration',
+          path: '/configuration/:id/',
           component: configuration,
+          name:'configuration'
         }, {
           path: '/wanCommunity',
           component: wanCommunity,

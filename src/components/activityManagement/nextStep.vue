@@ -65,39 +65,12 @@
 </template>
 
 <script>
-  import eventBus from "../../bus.js";
   import {create, getCategory, getResource} from "../../api";
 
   export default {
     name: "nextStep",
     created() {
-      let ary = [], obj = {};
-
-      // function p(s) {
-      //   return s < 10 ? '0' + s : s
-      // };
-      //
-      // function beautifyTime(num) {
-      //   let d = new Date(num + '');
-      //   const resDate = d.getFullYear() + '-' + p((d.getMonth() + 1)) + '-' + p(d.getDate());
-      //   const resTime = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
-      //   return resDate + ' ' + resTime;
-      // }
-      //
-      // eventBus.$on('getTarget', target => {
-      //   obj.name = target.name;
-      //   obj.start_at = beautifyTime(target.date[0]);
-      //   obj.end_at = beautifyTime(target.date[1]);
-      //   obj.rule = target.desc;
-      //   obj.resource = 'd';
-      //   ary.push(obj);
-      //   this.table = obj;
-      //   console.log(obj);
-      // });
-
       this.getcategoryList();
-      // this.createList(ary);
-
     },
     data() {
       return {
@@ -153,9 +126,8 @@
               }
               arys.push(obj);
             });
-            console.log(arys);
             arys.forEach(item => {
-              resource.push(JSON.stringify(item));
+              resource.push(item);
             });
 
             let a = newData.name,
@@ -164,10 +136,9 @@
               d = newData.desc,
               e = JSON.stringify(resource);
             console.log(newData);
-
             this.createList(a, b, c, d, e);
-            // this.$router.replace("/index");
-            // this.$message({message: '提交审核成功！', type: 'success'});
+            this.$router.replace("/index");
+            this.$message({message: '提交审核成功！', type: 'success'});
 
           } else {
             this.$message.error('提交审核失败！');
@@ -175,8 +146,8 @@
           }
         });
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm() {
+        this.$router.replace("/index");
       },
       deleteRow(index, rows) {
         rows.splice(index, 1);
