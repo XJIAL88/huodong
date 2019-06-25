@@ -26,9 +26,7 @@
             <el-col :span="6" style='text-align: right;'>
                 <el-cascader v-model="value" :options="options" @change="handleChange"></el-cascader>
             </el-col>
-
           </tamplate>
-
           <el-col :span='24' style="margin-top: 20px;">
             <!--@tab-click="handleClick"-->
             <el-tabs v-model="activeName">

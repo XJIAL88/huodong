@@ -83,7 +83,6 @@
     watch: {
       ruleForm: {
         handler() {
-
           function p(s) {
             return s < 10 ? '0' + s : s
           };

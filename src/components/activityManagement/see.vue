@@ -16,36 +16,52 @@
     </el-form>
     <el-row style='margin-top: 20px;'>
       <el-col :span="12">
-        <div class='title'>活动名称：<i>万社区拉新活动</i></div>
+        <div class='title'>活动名称：<i>{{detail.name}}</i></div>
       </el-col>
       <el-col :span="12">
-        <div class='title'>活动名称：<i>万社区拉新活动</i></div>
+        <div class='title'>活动时间：<i>{{detail.create_at}} ~ {{detail.end_at}}</i></div>
       </el-col>
     </el-row>
     <el-row style='margin-top: 20px;'>
       <el-col :span="12">
         <div class='title'>活动状态：
-          <el-button type="success" size="small">进行中</el-button>
+          <button ref='btn' class='btn'>{{detail.status | status}}</button>
         </div>
       </el-col>
     </el-row>
     <el-row style='margin-top: 20px;'>
       <el-col :span="24">
         <div class='title' style='margin-bottom: 20px;'>活动奖品：</div>
-        <el-table :data="tableData" align='center' border style="width: 100%">
+        <el-table :data="tableData" align='center' border style="width: 100%;max-width: 1200px;">
           <el-table-column
             prop="date"
-            label="日期"
-            width="180">
+            label="资源类型"
+            align='center'
+            width="240">
           </el-table-column>
           <el-table-column
             prop="name"
-            label="姓名"
-            width="180">
+            label="奖品名称"
+            align='center'
+            width="240">
           </el-table-column>
           <el-table-column
+            width="240"
+            align='center'
             prop="address"
-            label="地址">
+            label="剩余">
+          </el-table-column>
+          <el-table-column
+            width="240"
+            align='center'
+            prop="address"
+            label="已发放">
+          </el-table-column>
+          <el-table-column
+            width="240"
+            align='center'
+            prop="address"
+            label="已使用">
           </el-table-column>
         </el-table>
       </el-col>
@@ -57,7 +73,6 @@
       </el-col>
     </el-row>
     <el-divider></el-divider>
-
     <div class="icon">
       <el-row>
         <el-col :span="12">
@@ -104,12 +119,19 @@
         <el-col :span="24">
           <div class='title' style='margin-bottom: 20px;'>奖品：</div>
           <el-row type="flex" class="row-bg" justify="space-between" style='margin: 20px 0'>
-            <el-col :span="6"><div class="picImg"></div></el-col>
-            <el-col :span="6"><div class="picImg"></div></el-col>
-            <el-col :span="6"><div class="picImg"></div></el-col>
+            <el-col :span="6">
+              <div class="picImg"></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="picImg"></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="picImg"></div>
+            </el-col>
           </el-row>
-          <el-table :data="tableData" align='center' border style="width: 100%">
+          <el-table :data="tableData" border style="width: 100%">
             <el-table-column
+              align='center'
               prop="date"
               label="奖品类别"
               width="180">
@@ -117,21 +139,26 @@
             <el-table-column
               prop="name"
               label="资源类型"
+              align='center'
               width="180">
             </el-table-column>
             <el-table-column
+              align='center'
               prop="address"
               label="奖品">
             </el-table-column>
             <el-table-column
+              align='center'
               prop="address"
               label="发放数量">
             </el-table-column>
             <el-table-column
+              align='center'
               prop="address"
               label="每日上限（数量）">
             </el-table-column>
             <el-table-column
+              align='center'
               prop="address"
               label="发放时间">
             </el-table-column>
@@ -147,8 +174,14 @@
   </div>
 </template>
 <script>
+  import {detail} from "../../api";
+
   export default {
     name: "see",
+    created() {
+      let num = this.$route.params.id;
+      this.getdetail(num);
+    },
     data() {
       return {
         ruleForm: {
@@ -156,33 +189,57 @@
           date: '',
           desc: ''
         },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        tableData: [],
+        detail: {},
         desc: '',
       }
-
     },
     methods: {
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm() {
+        this.$router.replace('/index');
       },
       handleClick(row) {
         console.log(row);
+      },
+
+      //=>请求活动详情接口
+      async getdetail(num) {
+        let data = await detail(num);
+        this.detail = data.content;
+        let status = this.detail.status;
+        switch (status) {
+          case 1:
+            this.$refs.btn.style.backgroundColor = "#409eff";
+            break;
+          case 2:
+            this.$refs.btn.style.backgroundColor = "#ccc";
+            break;
+          case 3:
+            this.$refs.btn.style.backgroundColor = "#67c23a";
+            break;
+          case 4:
+            this.$refs.btn.style.backgroundColor = "#ccc";
+            break;
+          case 5:
+            this.$refs.btn.style.backgroundColor = "#ccc";
+            break;
+        }
+      }
+    },
+    filters: {
+      status(tag) {
+        switch (tag) {
+          case 1:
+            return '审批中';
+          case 2:
+            return '待配置';
+          case 3:
+            return '已上架';
+          case 4:
+            return '已下架';
+          case 5:
+            return '已失效';
+        }
       }
     }
   }
@@ -227,10 +284,19 @@
     font-size: 18px;
     color: #333;
   }
-  .picImg{
+
+  .picImg {
     width: 100%;
     height: 200px;
     background: #ccc;
     border-radius: 8px;
+  }
+  
+  .btn{
+    border:none;
+    padding: 6px 20px;
+    background: #ccc;
+    color: #fff;
+    border-radius: 4px;
   }
 </style>

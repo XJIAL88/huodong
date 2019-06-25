@@ -36,8 +36,9 @@ export default new Router({
           path: '/wanCommunity',
           component: wanCommunity,
         }, {
-          path: '/see',
+          path: '/see/:id/',
           component: see,
+          name:'see'
         },  {
           path: '/resource',
           component: resource,

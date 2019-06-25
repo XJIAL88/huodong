@@ -56,17 +56,28 @@
               <el-table-column prop="create_at" label="创建时间" align='center' width="200"></el-table-column>
               <el-table-column prop="status" align='center' label="活动状态" width="200">
                 <template slot-scope="scope">
-                  <el-tag type="primary" >{{scope.row.status |statusFil}}</el-tag>
+                  <button ref='btns' class='btns'>{{scope.row.status |statusFil}}</button>
                 </template>
               </el-table-column>
               <el-table-column prop="status" fixed="right" align='center' label="操作" width="150">
                 <template slot-scope="scope" class='btn'>
-                  <el-button type="text" icon="el-icon-view" @click='see'></el-button>
-                  <el-button type="text" icon="el-icon-upload2" v-show='scope.row.status===4'></el-button>
-                  <el-button type="text" icon="el-icon-download" v-show='scope.row.status===3'></el-button>
-                  <router-link :to="{name:'configuration',params:{id:scope.row.id}}">
-                    <el-button type="text" icon="el-icon-edit" v-show='scope.row.status===2 ||scope.row.status===4'></el-button>
-                  </router-link>
+                  <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
+                    <el-button type="text" icon="el-icon-view" @click="$router.push({params: {id: scope.row.id}, name: 'see'})"></el-button>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="上架" placement="bottom">
+                    <el-button type="text" icon="el-icon-upload2" @click='upload(scope.row.id,3)' v-show='scope.row.status===4'></el-button>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="下架" placement="bottom">
+                    <el-button type="text" icon="el-icon-download" @click='upload(scope.row.id,4)' v-show='scope.row.status===3'></el-button>
+                  </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
+                    <el-button
+                      type="text"
+                      icon="el-icon-edit"
+                      @click="$router.push({params: {id: scope.row.id}, name: 'configuration'})"
+                      v-show='scope.row.status===2 ||scope.row.status===4'>
+                    </el-button>
+                  </el-tooltip>
                 </template>
               </el-table-column>
             </el-table>
@@ -79,33 +90,29 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage1"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          :current-page.sync="query.now_page"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="query.page_size"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="total">
         </el-pagination>
       </div>
     </footer>
-
-    <!--    <div v-show="!listLoading" class="pagination-container" style="margin-top:10px;text-align:right">-->
-    <!--      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="query.page"-->
-    <!--                     :page-sizes="[10,20,30,50]" :page-size="query.page_size" layout="total, sizes, prev, pager, next, jumper" :total="total">-->
-    <!--      </el-pagination>-->
-    <!--    </div>-->
   </div>
 </template>
 
 <script>
-  import {getList} from "../../api";
+  import {getList, update} from "../../api";
 
   export default {
+    inject: ['reload'],
     name: "home",
     created() {
       this.getList();
     },
     data() {
       return {
+        total: 0,
         formInline: {
           search: '',
           region: ''
@@ -113,13 +120,11 @@
         //=>表格
         tableData: [],
         //=>页码
-        currentPage1: 1,
-        currentPage2: 5,
-        currentPage3: 5,
-        currentPage4: 4,
-        page: {},
+        query: {
+          now_page: 1,
+          page_size: 10,
+        },
         index: '1',
-
         //=>loading
         fullscreenLoading: true
 
@@ -151,32 +156,48 @@
       },
       //页码
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.query.page_size = val;
+        this.getList();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.query.now_page = val;
+        this.getList();
       },
       filterTag(value, row) {
         return row.tag === value;
       },
-      see() {
-        this.$router.replace('/see');
+      async upload(id, num) {
+        let data = await update(id, num);
+        if (data.code === 0 && num === 3) {
+          this.$message({
+            message: '恭喜上架成功！！',
+            type: 'success'
+          });
+          this.reload();
+        } else if (data.code !== 0 && num === 3) {
+          this.$message.error('很遗憾，上架失败了！！');
+        } else if (data.code === 0 && num === 4) {
+          this.$message({
+            message: '恭喜下架成功！！',
+            type: 'success'
+          });
+          this.reload();
+        } else {
+          this.$message.error('很遗憾，下架失败了！！');
+        }
       },
+
       //=>获取列表
-      async getList() {
-        let data = await getList();
+      async getList(val) {
+        let obj = this.query;
+        let data = await getList(obj);
         if (data) {
           let ary = data.content.list;
           this.tableData = ary;
           this.fullscreenLoading = false;
-          this.page.now_page = data.content.now_page;
-          this.page.page_size = data.content.page_size;
-          this.page.total = data.content.total;
-
-          console.log(data);
+          this.total = data.content.total;
         }
-
-      }
+      },
     },
     filters: {
       statusFil(tag) {
@@ -208,5 +229,13 @@
 
   .cell button {
     margin: 4px 0;
+  }
+
+  .btns {
+    border: none;
+    padding: 6px 20px;
+    background: #ccc;
+    color: #fff;
+    border-radius: 4px;
   }
 </style>

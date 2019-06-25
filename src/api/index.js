@@ -4,11 +4,15 @@ axios.defaults.baseURL = "https://etivities-czytest.colourlife.com";
 axios.interceptors.response.use(result => result.data);
 
 //=>查看列表
-export let getList = () => {
+export let getList = (obj) => {
+  let {now_page, page_size} = obj;
+  console.log(now_page);
   return axios.get('/backend/activity/list', {
       params: {
         adminId: '3',
         adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+        page: now_page,
+        page_size: page_size
       }
     }
   );
@@ -45,6 +49,29 @@ export let create = (a, b, c, d, e) => {
     end_at: c,
     rule: d,
     resource: e
+
+  })
+};
+
+//=>查看活动详情
+export let detail = (num) => {
+  return axios.get('/backend/activity/detail', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      id: num
+    },
+  })
+};
+
+
+//=>活动上下架
+export let update = (id,num) => {
+  return axios.post('/backend/activity/status/update', {
+    adminId: '3',
+    adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+    id: id,
+    status: num,
 
   })
 };
