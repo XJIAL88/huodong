@@ -135,7 +135,7 @@
         limitRegisterTime: [],  // 限制注册时间
         limitLoginTime: [],  // 限制登录时间
         limitNoLoginTime: [],  // 限制未登录时间
-        joinConditionValue: null, // 是否设置需要签到，1不需要，2需要
+        joinConditionValue: 1, // 是否设置需要签到，1不需要，2需要
         userPackage: 1,  // 是否上传用户限制包，1未上传，2 有上传
       }
     },
@@ -156,21 +156,6 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            const activity_id = this.$route.query.activeId;  // 活动ID
-            const module_id = this.$route.query.moduleId;  // 模块ID
-            const {name} = this.firstForm;  // 模块名称
-            const {start_at} = this.firstForm;  // 活动模块开始时间
-            const {end_at} = this.firstForm;  // 活动模块结束时间
-            const {desc} = this.firstForm;  // 活动模块描述
-            const number_daily = this.dayNum;  // 每日可参加次数
-            const number_weekly = this.weekNum;  // 每周可参加次数
-            const number_total = this.allNum;  // 总共可参加次数
-            let limit_type = this.limitType;  // 限制类型
-            let limit_register_time = this.limitRegisterTime; // 限制注册时间
-            const limit_login_time = this.limitLoginTime; // 限制登录时间
-            const limit_no_login_time = this.limitNoLoginTime; // 限制未登录时间
-            const has_limit_user_package = this.userPackage; // 是否上传用户限制包
-            const has_limit_signed = this.joinConditionValue;  // 是否设置签到
             if (this.form.registeredTime.length !== 0) {
               limit_register_time = JSON.stringify([{time: this.form.registeredTime[0] + ',' + this.form.registeredTime[1]}]);
               this.limitType.push(2)
@@ -187,6 +172,22 @@
               this.limitType.push(1)
             }
             this.limitType = this.limitType.join(',');
+            const activity_id = this.$route.query.activeId;  // 活动ID
+            const module_id = this.$route.query.moduleId;  // 模块ID
+            const {name} = this.firstForm;  // 模块名称
+            const {start_at} = this.firstForm;  // 活动模块开始时间
+            const {end_at} = this.firstForm;  // 活动模块结束时间
+            const {desc} = this.firstForm;  // 活动模块描述
+            const number_daily = this.dayNum;  // 每日可参加次数
+            const number_weekly = this.weekNum;  // 每周可参加次数
+            const number_total = this.allNum;  // 总共可参加次数
+            let limit_type = this.limitType;  // 限制类型
+            let limit_register_time = this.limitRegisterTime; // 限制注册时间
+            const limit_login_time = this.limitLoginTime; // 限制登录时间
+            const limit_no_login_time = this.limitNoLoginTime; // 限制未登录时间
+            const has_limit_user_package = this.userPackage; // 是否上传用户限制包
+            const has_limit_signed = this.joinConditionValue;  // 是否设置签到
+
 
             this.tab('third');
             this.configModule(activity_id, module_id, name, start_at, end_at,desc,number_daily, number_weekly,number_total,limit_type,limit_register_time,limit_login_time, limit_no_login_time,has_limit_user_package,has_limit_signed)
@@ -216,7 +217,7 @@
           this.form.registeredTime = '';
           this.form.loginTime = '';
           this.form.unLoginTime = '';
-          this.joinConditionValue = null;
+          this.joinConditionValue = 1;
           this.limitType = []
         } else {
           this.disable = false
@@ -228,7 +229,7 @@
         } else if(type === '签到'){
           this.joinConditionValue = 2
         } else{
-          this.joinConditionValue = null
+          this.joinConditionValue = 1
         }
       },
       async configModule (activity_id, module_id, name, start_at, end_at,desc,number_daily, number_weekly,number_total,limit_type,limit_register_time,limit_login_time, limit_no_login_time,has_limit_user_package,has_limit_signed) {
