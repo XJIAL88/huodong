@@ -7,6 +7,8 @@
       <el-date-picker
         v-model="ruleForm.date"
         type="datetimerange"
+        format="yyyy-MM-dd HH:mm:ss"
+        value-format="yyyy-MM-dd HH:mm:ss"
         :picker-options="pickerOptions"
         range-separator="至"
         start-placeholder="开始日期"
@@ -25,6 +27,7 @@
 
 <script>
   import {mapState} from 'vuex';
+  import PubSub from 'pubsub-js';
   export default {
     name: "baseSet",
     props: ['tab'],
@@ -81,6 +84,12 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.tab('second');
+            PubSub.publish("baseSet",{
+              name: this.ruleForm.name,
+              start_at: this.ruleForm.date[0],
+              end_at: this.ruleForm.date[1],
+              desc: this.ruleForm.desc
+            })
           } else {
             return false;
           }

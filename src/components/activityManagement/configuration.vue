@@ -16,7 +16,7 @@
             </el-form-item>
             <el-form-item label="模块类型：" :label-width="labelWidth" prop="region">
               <el-select v-model="form.moduleType" placeholder="请选择模块类型">
-                <el-option label="领礼包" value="gift"></el-option>
+                <el-option v-for="(item,index) in moduleTypeLists" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -33,6 +33,12 @@
           </div>
           <span class="item-title">{{item.name}}</span>
         </div>
+        <div class="item" @click="jump('/wanCommunity','万社区')">
+          <div class="item-img">
+            <img src="../../assets/u806.png" height="32" width="32"/>
+          </div>
+          <span class="item-title">万社区</span>
+        </div>
       </div>
     </div>
   </div>
@@ -41,7 +47,7 @@
 <script>
   import {UPDATE_NAME} from "../../vuex/mutation-types";
   import {mapState} from 'vuex';
-  import {reqCreateActiveModule} from "../../api/api";
+  import {reqCreateActiveModule,reqModuleTypeList} from "../../api/api";
 
   export default {
     data () {
@@ -61,21 +67,25 @@
             { required: true, message: '请选择模块类型', trigger: 'change' }
           ]
         },  // 表单验证规则
+        moduleTypeLists: [], // 模块类型列表
+        activeId: 0,  // 活动ID
+        moduleId: 0,  // 模块ID
       }
     },
     methods: {
       jump (path, activeName) {
         this.$store.commit(UPDATE_NAME, activeName);
-        this.$router.push(path);
+        const {activeId,moduleId} = this;
+        this.$router.push({path, query:{activeId,moduleId}});
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            const { form } = this;
+            const { form, activeId } = this;
             this.addModule = false;
             const name = form.name;
             const moduleType = form.moduleType;
-            this.createActiveModule(79, name, moduleType);
+            this.createActiveModule(activeId, name, moduleType);
             this.$refs[formName].resetFields();
           } else {
             return false;
@@ -86,12 +96,23 @@
         this.addModule = false;
         this.$refs[formName].resetFields();
       },
-      createActiveModule (activeId, name, typeId) {
-        reqCreateActiveModule(activeId, name, typeId)
+      async createActiveModule (activeId, name, typeId) {
+        const result = await reqCreateActiveModule(activeId, name, typeId)
+        if (result.code === 0) {
+          this.moduleId = result.content;
+        }
+      },
+      async moduleTypeList () {
+        const result = await reqModuleTypeList();
+        if (result.code === 0) {
+          this.moduleTypeLists = result.content;
+        }
       }
     },
-    created() {
-      this.$store.dispatch('getActiveModuleLists')
+    mounted() {
+      this.activeId = this.$route.params.id;
+      this.$store.dispatch('getActiveModuleLists', this.activeId);
+      this.moduleTypeList();
     },
     computed: {
       ...mapState({

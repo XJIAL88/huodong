@@ -14,7 +14,7 @@
           <baseSet :tab="tab"></baseSet>
         </el-tab-pane>
         <el-tab-pane label="参与设置" name="second">
-          <joinSet :tab="tab"></joinSet>
+          <joinSet :tab="tab" :moduleId="moduleId"></joinSet>
         </el-tab-pane>
         <el-tab-pane label="奖品设置" name="third">
           <prizeSet></prizeSet>
@@ -37,9 +37,8 @@
     data() {
       return {
         activeName: 'first',
-        stopTab: function (a, b) {
-
-        }
+        moduleId: 0,  // 模块ID
+        stopTab: function (a, b) {}
       };
     },
     methods: {
@@ -47,8 +46,10 @@
         this.activeName = num
       },
       handleClick(tab, event) {
-
       }
+    },
+    created () {
+      this.$route.query.moduleId = this.moduleId;
     }
   }
 </script>

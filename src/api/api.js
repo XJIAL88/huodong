@@ -1,24 +1,46 @@
 import axios from 'axios';
 // 获取活动模块列表
-export const reqActiveModuleLists = () => {
+export const reqActiveModuleLists = (activity_id) => {
   return axios.get('/backend/module/list',{
     params: {
       adminId: '3',
       adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
-      activity_id: 79
+      activity_id,
     }
   })
 };
+
 // 新建活动模块
-export const reqCreateActiveModule = (activeId, name, typeId) => {
+export const reqCreateActiveModule = (activity_id, name, type_id) => {
   return axios.post('/backend/module/create',{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
-    activity_id: 79,
+    activity_id,
     name,
-    type_id: typeId
+    type_id,
   })
 };
+
+// 获取活动模块列表
+export const reqModuleTypeList = () => {
+  return axios.get('/backend/module/type/list',{
+    params: {
+      adminId: '3',
+      adminToken:'bc4f4018a91aaaad7eb78327ee6d2949'
+    }
+  })
+};
+
+// 上传用户限制包
+export const reqUserPackageUpload = (module_id, file) => {
+  return axios.post('/backend/user/package/upload',{
+    adminId: '3',
+    adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
+    module_id,
+    package: file
+  })
+};
+
 // 配置模块
 export const reqConfigModule = (activity_id, module_id, name, start_at, end_at,desc,number_daily,
                                 number_weekly,number_total,limit_type,limit_register_time,limit_login_time,
@@ -27,7 +49,7 @@ export const reqConfigModule = (activity_id, module_id, name, start_at, end_at,d
   return axios.post('/backend/module/edit',{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
-    activity_id,
+    activity_id,  // 活动ID
     module_id,  // 模块ID
     name,  // 模块名称
     start_at,  // 活动模块开始时间

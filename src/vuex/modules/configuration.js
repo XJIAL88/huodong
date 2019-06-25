@@ -23,8 +23,8 @@ const mutations = {
 
 const actions = {
   // 获取活动模块列表
-  async getActiveModuleLists ({commit}) {
-    const result = await reqActiveModuleLists();
+  async getActiveModuleLists ({commit},active_id) {
+    const result = await reqActiveModuleLists(active_id);
     if (result.code === 0) {
       const activeModuleLists = result.content;
       commit(RECEIVE_ACTIVE_MODULE_LISTS, activeModuleLists)
