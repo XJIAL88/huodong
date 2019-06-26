@@ -100,14 +100,14 @@ export let awardList = (a, b) => {
 };
 
 //=>获取活动资源列表
-export let awardset = (a, b) => {
-  return axios.get('/backend/activity/award/set', {
-    adminId: '3',
-    adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
-    category_id: a,
-    number: b,
-    page_size: 500,
-    page: 1
+export let awardset = () => {
+  return axios.get('/backend/resource/activity/list', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      page_size: 500,
+      page: 1
+    },
   })
 };
 
