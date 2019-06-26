@@ -36,8 +36,7 @@
                 </div>
                 <span class="el-dropdown-link">用户信息</span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>注销</el-dropdown-item>
-                  <el-dropdown-item>退出</el-dropdown-item>
+                  <el-dropdown-item @click="open">退出</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -53,11 +52,30 @@
 
 <script>
   export default {
-    name: 'App',
+    name: 'home',
     mounted() {
       let clientW = document.documentElement.clientHeight || document.body.clientHeight,
         content = document.getElementById('content');
       content.style.height = clientW + 'px';
+    },
+    methods: {
+      open() {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      }
     }
   }
 </script>

@@ -6,7 +6,6 @@ axios.interceptors.response.use(result => result.data);
 //=>查看列表
 export let getList = (obj) => {
   let {now_page, page_size} = obj;
-  console.log(now_page);
   return axios.get('/backend/activity/list', {
       params: {
         adminId: '3',
@@ -66,7 +65,7 @@ export let detail = (num) => {
 
 
 //=>活动上下架
-export let update = (id,num) => {
+export let update = (id, num) => {
   return axios.post('/backend/activity/status/update', {
     adminId: '3',
     adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
@@ -75,3 +74,40 @@ export let update = (id,num) => {
 
   })
 };
+
+//=>获取活动资源列表
+export let activity = (a, b) => {
+  return axios.get('/backend/activity/detail', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      category_id: a,
+      number: b,
+      page_size: 500,
+      page: 1
+    },
+  })
+};
+
+//=>获取活动资源列表
+export let awardList = (a, b) => {
+  return axios.get('/backend/activity/award/list', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+    },
+  })
+};
+
+//=>获取活动资源列表
+export let awardset = (a, b) => {
+  return axios.get('/backend/activity/award/set', {
+    adminId: '3',
+    adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+    category_id: a,
+    number: b,
+    page_size: 500,
+    page: 1
+  })
+};
+

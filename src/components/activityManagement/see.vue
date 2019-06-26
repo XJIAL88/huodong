@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <el-form ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form label-width="100px" class="demo-ruleForm">
       <el-row>
         <el-col :span="12">
           <h3 class='title'>新建活动
@@ -69,7 +69,7 @@
     <el-row style='margin-top: 20px;'>
       <el-col :span="24">
         <div class='title' style='margin-bottom: 20px;'>活动规则：</div>
-        <el-input type="textarea" v-model="desc" maxlength="1000" show-word-limit rows=8></el-input>
+        <el-input type="textarea" v-model="detail.rule" disabled='disabled' maxlength="1000" show-word-limit rows=8></el-input>
       </el-col>
     </el-row>
     <el-divider></el-divider>
@@ -96,7 +96,7 @@
       <el-row style='margin-top: 20px;'>
         <el-col :span="24">
           <div class='title' style='margin-bottom: 20px;'>活动规则：</div>
-          <el-input type="textarea" v-model="desc" maxlength="1000" show-word-limit rows=8></el-input>
+          <el-input type="textarea"  v-model="desc" maxlength="1000" show-word-limit rows=8></el-input>
         </el-col>
       </el-row>
       <el-row style='margin-top: 20px;'>
@@ -107,28 +107,28 @@
           <div class='title'>注册时间：<i>2018-10-24 16:48 - 2018-10-24 16:48</i></div>
         </el-col>
       </el-row>
-      <el-row style='margin-top: 20px;'>
-        <el-col :span="24">
-          <div class='title' style='margin-bottom: 20px;'>商品推荐：</div>
-        </el-col>
-        <el-col :span='8'></el-col>
-        <el-col :span='8'></el-col>
-        <el-col :span='8'></el-col>
-      </el-row>
+      <!--商品推荐-->
+      <!--  <div class='commodity'>-->
+      <!--        <el-row type="flex" class="row-bg" justify="space-between" style='margin: 20px 0'>-->
+      <!--          <el-col :span="24">-->
+      <!--            <div class='title' style='margin-bottom: 20px;'>商品推荐：</div>-->
+      <!--          </el-col>-->
+      <!--        </el-row>-->
+      <!--        <el-row>-->
+      <!--          <el-col :span="6">-->
+      <!--            <div class="picImg"></div>-->
+      <!--          </el-col>-->
+      <!--          <el-col :span="6">-->
+      <!--            <div class="picImg"></div>-->
+      <!--          </el-col>-->
+      <!--          <el-col :span="6">-->
+      <!--            <div class="picImg"></div>-->
+      <!--          </el-col>-->
+      <!--        </el-row>-->
+      <!--      </div>-->
       <el-row style='margin-top: 20px;'>
         <el-col :span="24">
           <div class='title' style='margin-bottom: 20px;'>奖品：</div>
-          <el-row type="flex" class="row-bg" justify="space-between" style='margin: 20px 0'>
-            <el-col :span="6">
-              <div class="picImg"></div>
-            </el-col>
-            <el-col :span="6">
-              <div class="picImg"></div>
-            </el-col>
-            <el-col :span="6">
-              <div class="picImg"></div>
-            </el-col>
-          </el-row>
           <el-table :data="tableData" border style="width: 100%">
             <el-table-column
               align='center'
@@ -174,21 +174,19 @@
   </div>
 </template>
 <script>
-  import {detail} from "../../api";
+  import {detail, activity} from "../../api";
 
   export default {
     name: "see",
     created() {
-      let num = this.$route.params.id;
+      let num = this.$route.params.id,
+        number = this.$route.params.number;
       this.getdetail(num);
+      this.getactivity(num, number);
+
     },
     data() {
       return {
-        ruleForm: {
-          name: '',
-          date: '',
-          desc: ''
-        },
         tableData: [],
         detail: {},
         desc: '',
@@ -202,11 +200,12 @@
         console.log(row);
       },
 
-      //=>请求活动详情接口
+      //=>请求活动详情
       async getdetail(num) {
         let data = await detail(num);
         this.detail = data.content;
         let status = this.detail.status;
+        console.log(data);
         switch (status) {
           case 1:
             this.$refs.btn.style.backgroundColor = "#409eff";
@@ -224,6 +223,12 @@
             this.$refs.btn.style.backgroundColor = "#ccc";
             break;
         }
+      },
+
+      //=>请求活动资源列表
+      async getactivity(a, b) {
+        let data = await activity(a, b);
+        console.log(data);
       }
     },
     filters: {
@@ -291,9 +296,9 @@
     background: #ccc;
     border-radius: 8px;
   }
-  
-  .btn{
-    border:none;
+
+  .btn {
+    border: none;
     padding: 6px 20px;
     background: #ccc;
     color: #fff;

@@ -56,24 +56,26 @@
               <el-table-column prop="create_at" label="创建时间" align='center' width="200"></el-table-column>
               <el-table-column prop="status" align='center' label="活动状态" width="200">
                 <template slot-scope="scope">
-                  <button ref='btns' class='btns'>{{scope.row.status |statusFil}}</button>
+                  <el-tag disable-transitions>{{scope.row.status |statusFil}}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="status" fixed="right" align='center' label="操作" width="150">
+              <el-table-column prop="status" fixed="right" align='center' label="操作" width="170">
                 <template slot-scope="scope" class='btn'>
                   <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
-                    <el-button type="text" icon="el-icon-view" @click="$router.push({params: {id: scope.row.id}, name: 'see'})"></el-button>
+                    <el-button type='primary' circle size="mini" icon="el-icon-view" @click="$router.push({params: {id: scope.row.id,number:scope.row.number}, name: 'see'})"></el-button>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="上架" placement="bottom">
-                    <el-button type="text" icon="el-icon-upload2" @click='upload(scope.row.id,3)' v-show='scope.row.status===4'></el-button>
+                    <el-button type='primary' circle size="mini" icon="el-icon-upload2" @click='upload(scope.row.id,3)' v-show='scope.row.status===4'></el-button>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="下架" placement="bottom">
-                    <el-button type="text" icon="el-icon-download" @click='upload(scope.row.id,4)' v-show='scope.row.status===3'></el-button>
+                    <el-button type='primary' circle size="mini" icon="el-icon-download" @click='upload(scope.row.id,4)' v-show='scope.row.status===3'></el-button>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
                     <el-button
-                      type="text"
+                      type='primary'
                       icon="el-icon-edit"
+                      size="mini"
+                      circle
                       @click="$router.push({params: {id: scope.row.id}, name: 'configuration'})"
                       v-show='scope.row.status===2 ||scope.row.status===4'>
                     </el-button>
@@ -191,12 +193,14 @@
       async getList(val) {
         let obj = this.query;
         let data = await getList(obj);
-        if (data) {
+        console.log(data);
+        // if (data) {
           let ary = data.content.list;
           this.tableData = ary;
           this.fullscreenLoading = false;
           this.total = data.content.total;
-        }
+        // }
+
       },
     },
     filters: {
