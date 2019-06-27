@@ -14,7 +14,6 @@
               <el-button type="primary" @click="dialogFormVisible = true">新增奖品</el-button>
             </el-col>
           </div>
-
           <div v-else>
             <el-col :span="6" style='margin-right: 10px;'>
               <el-cascader style='width:100%;' v-model="value" :options="options" @change="handleChange"></el-cascader>
@@ -29,7 +28,6 @@
           </div>
         </el-row>
       </el-form>
-
       <el-col :span='24' style="margin-top: 20px;">
         <el-tabs v-model="activeName">
           <el-tab-pane label="奖品列表" name="first">
@@ -54,15 +52,31 @@
           </el-tab-pane>
           <el-tab-pane label="资源列表" name="second">
             <!--资源列表-->
-            <template style='margin-top: 20px; max-width: 1200px'>
-              <el-table :data="tableData" stripe style="width: 100%" max-width='1200'>
-                <el-table-column prop="date" label="资源ID" width="240" align='center'></el-table-column>
-                <el-table-column prop="name" label="资源名称" width="240" align='center'></el-table-column>
-                <el-table-column prop="address" label="活动名称" width="240" align='center'></el-table-column>
-                <el-table-column prop="address" label="总数" width="240" align='center'></el-table-column>
-                <el-table-column prop="address" label="已使用" width="240" align='center'></el-table-column>
+            <template style='margin-top: 20px; max-width: 1200px;'>
+              <el-table :data="resources" stripe style="width: 100%;">
+                <el-table-column prop="id" label="资源ID" width="240" align='center'></el-table-column>
+                <el-table-column prop="resourceName" label="资源名称" width="240" align='center'></el-table-column>
+                <el-table-column prop="activityName" label="活动名称" width="240" align='center'></el-table-column>
+                <el-table-column prop="number" label="总数" width="240" align='center'></el-table-column>
+                <el-table-column prop="usedNumber" label="已使用" width="240" align='center'></el-table-column>
               </el-table>
+              <footer class="footer">
+                <el-row>
+                  <el-col :span='24'>
+                    <el-pagination
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      :current-page="page.now_page"
+                      :page-sizes="[10, 20, 30, 40]"
+                      :page-size="page.page_size"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :total="total">
+                    </el-pagination>
+                  </el-col>
+                </el-row>
+              </footer>
             </template>
+
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -73,32 +87,22 @@
       <el-row>
         <el-col :span='22'>
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
-
             <el-form-item label="选择活动" :label-width="formLabelWidth" prop="activity">
-              <el-select v-model="ruleForm.activity" placeholder="请选择活动">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select v-model="ruleForm.activity" placeholder="请选择活动" @change="testingActivity">
+                <el-option v-for='item in activity' :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item label="选择类型" :label-width="formLabelWidth" prop="type">
-              <el-select v-model="ruleForm.type" placeholder="请选择类型">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-
             <el-form-item label="选择资源" :label-width="formLabelWidth" prop="resources">
               <el-select v-model="ruleForm.resources" placeholder="请选择资源">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <el-option v-for='item in resourceName' :key="Math.random()" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
-
             <el-form-item label="输入数量" :label-width="formLabelWidth" prop="number">
               <el-input v-model="ruleForm.number" autocomplete="off"></el-input>
             </el-form-item>
-
+            <el-form-item label="单个奖品所需资源数" :label-width="formLabelWidth" prop="resourceNumber">
+              <el-input v-model="ruleForm.resourceNumber" autocomplete="off"></el-input>
+            </el-form-item>
             <el-form-item label="奖品名称" :label-width="formLabelWidth" prop="prize">
               <el-input v-model="ruleForm.prize" autocomplete="off"></el-input>
             </el-form-item>
@@ -114,34 +118,35 @@
             <!--     <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
             <!--   </el-upload>-->
             <!-- </el-form-item>-->
-
           </el-form>
         </el-col>
       </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import {awardset} from "../../api"
+  import {awardset, prize, awardsetPrize, toConfigure} from "../../api"
 
   export default {
     name: "index",
     created() {
       this.getawardset();
+      this.getPrize();
     },
     data() {
       return {
+        total: 0,
         formLabelWidth: '150px',
         tableData: [],
+        resources: [],
         value: [],
         activeName: 'first',
         input: '',
-        imageUrl: '',
         dialogTableVisible: false,
         dialogFormVisible: false,
         form: {
@@ -156,7 +161,7 @@
         },
         ruleForm: {
           activity: '',
-          type: '',
+          resourceNumber: '',
           resources: '',
           number: '',
           prize: '',
@@ -166,8 +171,8 @@
             {required: true, message: '请选择活动', trigger: 'change'},
             {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'change'}
           ],
-          type: [
-            {required: true, message: '请选择类型', trigger: 'change'}
+          resourceNumber: [
+            {required: true, message: '请输入数量', trigger: 'blur'}
           ],
           resources: [
             {required: true, message: '请选择资源', trigger: 'change'}
@@ -179,7 +184,16 @@
             {required: true, message: '请输入奖品名称', trigger: 'blur'}
           ],
         },
-        options: []
+        activity: [],
+        resourceName: [],
+        category_name: {},
+        prizeId: '',
+        options: [],
+        //=>页码
+        page: {
+          now_page: 1,
+          page_size: 10,
+        },
       };
     },
 
@@ -214,17 +228,91 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      async getawardset() {
-        let data = await awardset();
-        console.log(data);
-        let activity = [], type = [], resources = [];
-        let ary = data.content.dataList;
-        ary.forEach(item => {
-          let activity = {}, type = {}, resources = {};
-          item.activityName;
+      //页码
+      handleSizeChange(val) {
+        this.page.page_size = val;
+        this.getawardset();
+      },
+      handleCurrentChange(val) {
+        this.page.now_page = val;
+        this.getawardset();
+      },
+      testingActivity(val) {
+
+        let obj = {};
+        let ary = this.activity;
+        obj = ary.find((item)=>{//这里的userList就是上面遍历的数据源
+          return item.value === val;//筛选出匹配数据
         });
 
+        this.prizeId = obj.id;
+        this.getawardsetPrize();
+      },
+      submit() {
+        this.dialogFormVisible = false;
+        this.gettoConfigure();
+      },
 
+      //====请求接口====
+      //=>获取活动资源列表
+      async getawardset() {
+        let obj = this.page;
+        let data = await awardset(obj);
+        let ary = data.content.dataList;
+        let total = data.content.dataCount;
+        this.total = total;
+        this.resources = ary;
+      },
+
+      //=>新增奖品
+      async getPrize() {
+        let data = await prize();
+        let ary = data.content;
+        ary.forEach(item => {
+          let obj = {};
+          obj.label = item.name;
+          obj.value = item.number;
+          obj.id = item.id;
+          this.activity.push(obj);
+        });
+        console.log(this.activity);
+        console.log(data);
+      },
+
+      //=>新增奖品（获取活动资源列表）
+      async getawardsetPrize() {
+        let obj = this.page, objs = {}, category = {};
+        this.page.number = this.ruleForm.activity;
+        let data = await awardsetPrize(obj);
+        console.log(data);
+        objs.label = data.content.dataList[0].category;
+        objs.value = data.content.dataList[0].categoryId;
+        this.resourceName = [];
+        this.resourceName.push(objs);
+
+        this.category_name.activity_name = data.content.dataList[0].activityName; //活动名称
+        this.category_name.resource_name = data.content.dataList[0].resourceName; //资源名称
+        this.category_name.resource_id = data.content.dataList[0].id; //资源ID
+        this.category_name.category_id = data.content.dataList[0].resourceId; //资源类型ID
+        this.category_name.category_name = data.content.dataList[0].resourceName;//资源类型名称
+      },
+      //=>配置奖品池
+      async gettoConfigure() {
+        let obj = {}, result = this.category_name;
+
+        obj.activity_name = result.activity_name;//活动名称
+        obj.resource_name = result.resource_name;//资源名称
+        obj.resource_id = result.resource_id;//资源ID
+        obj.category_id = result.category_id;//资源类型ID
+        obj.category_name = result.category_name;//资源类型名称
+        obj.activity_id = this.prizeId;//活动id
+        obj.award_number = this.ruleForm.number;//奖品数量
+        obj.resource_number = this.ruleForm.resourceNumber;  //单个奖品所需资源数
+        obj.name = this.ruleForm.prize;  //奖品名
+
+        let data = await toConfigure(obj);
+        console.log(obj);
+        console.log(data);
       }
     },
 
@@ -291,5 +379,10 @@
 
   .cell {
     color: #333;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 20px;
   }
 </style>

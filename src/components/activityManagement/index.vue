@@ -62,7 +62,8 @@
               <el-table-column prop="status" fixed="right" align='center' label="操作" width="170">
                 <template slot-scope="scope" class='btn'>
                   <el-tooltip class="item" effect="dark" content="查看" placement="bottom">
-                    <el-button type='primary' circle size="mini" icon="el-icon-view" @click="$router.push({params: {id: scope.row.id,number:scope.row.number}, name: 'see'})"></el-button>
+                    <el-button type='primary' circle size="mini" icon="el-icon-view"
+                               @click="$router.push({params: {id: scope.row.id,number:scope.row.number}, name: 'see'})"></el-button>
                   </el-tooltip>
                   <el-tooltip class="item" effect="dark" content="上架" placement="bottom">
                     <el-button type='primary' circle size="mini" icon="el-icon-upload2" @click='upload(scope.row.id,3)' v-show='scope.row.status===4'></el-button>
@@ -110,6 +111,9 @@
     inject: ['reload'],
     name: "home",
     created() {
+      this.getList();
+    },
+    activated() {
       this.getList();
     },
     data() {
@@ -195,10 +199,10 @@
         let data = await getList(obj);
         console.log(data);
         // if (data) {
-          let ary = data.content.list;
-          this.tableData = ary;
-          this.fullscreenLoading = false;
-          this.total = data.content.total;
+        let ary = data.content.list;
+        this.tableData = ary;
+        this.fullscreenLoading = false;
+        this.total = data.content.total;
         // }
 
       },

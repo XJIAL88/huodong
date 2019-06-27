@@ -76,38 +76,58 @@ export let update = (id, num) => {
 };
 
 //=>获取活动资源列表
-export let activity = (a, b) => {
-  return axios.get('/backend/activity/detail', {
-    params: {
-      adminId: '3',
-      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
-      category_id: a,
-      number: b,
-      page_size: 500,
-      page: 1
-    },
-  })
-};
-
-//=>获取活动资源列表
-export let awardList = (a, b) => {
-  return axios.get('/backend/activity/award/list', {
-    params: {
-      adminId: '3',
-      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
-    },
-  })
-};
-
-//=>获取活动资源列表
-export let awardset = () => {
+export let awardset = (obj) => {
+  let {now_page, page_size} = obj;
   return axios.get('/backend/resource/activity/list', {
     params: {
       adminId: '3',
       adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
-      page_size: 500,
-      page: 1
+      page: now_page,
+      page_size: page_size
     },
   })
 };
 
+//=>获取活动资源列表（新增奖品）
+export let awardsetPrize = (obj) => {
+  let {number} = obj;
+  console.log(number)
+  return axios.get('/backend/resource/activity/list', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      page: 1,
+      page_size: 100,
+      number: number
+    },
+  })
+};
+
+//=>新增奖品
+export let prize = () => {
+  return axios.get('/backend/all/activity/list', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      status: '2',
+    },
+  })
+};
+
+//=>配置活动奖品池
+export let toConfigure = (obj) => {
+  let {activity_id, activity_name, name, resource_id, resource_name, category_id, category_name, resource_number, award_number} = obj;
+  return axios.post('/backend/activity/award/set', {
+    adminId: '3',
+    adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+    activity_id: activity_id,
+    activity_name: activity_name,
+    name: name,
+    resource_id: resource_id,
+    resource_name: resource_name,
+    category_id: category_id,
+    category_name: category_name,
+    resource_number: resource_number,
+    award_number: award_number,
+  })
+};

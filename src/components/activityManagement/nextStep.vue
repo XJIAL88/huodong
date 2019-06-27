@@ -161,7 +161,6 @@
       },
 
       // ======接口请求======
-
       //=>创建活动
       async createList(a, b, c, d, e) {
         let data = await create(a, b, c, d, e);
