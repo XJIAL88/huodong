@@ -76,6 +76,20 @@ export let update = (id, num) => {
 };
 
 //=>获取活动资源列表
+export let activity = (a, b) => {
+  return axios.get('/backend/activity/detail', {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      category_id: a,
+      number: b,
+      page_size: 500,
+      page: 1
+    },
+  })
+};
+
+//=>获取活动资源列表
 export let awardset = (obj) => {
   let {now_page, page_size} = obj;
   return axios.get('/backend/resource/activity/list', {
