@@ -90,6 +90,8 @@
         category_name: "",  // 资源类型
         name: '', // 劵
         award_number: 0, // 发放数量
+        category_id: null, // 资源Id
+        id: null, // 奖品Id
       }
     },
     methods: {
@@ -101,11 +103,19 @@
         // [{"award_id":"45", "name":"券", "category_id":"6","category_name":"彩之云优惠券", "number":"1","signed_type":"1"}],
         // this.activityAward = [{award_id:'45', name: this.name, category_id: '6', category_name: this.category_name}];
         const activityAward = JSON.stringify(this.tableData);
+        this.tableData.map(item => {
+          // delete item.id
+          delete item.id
+        });
         console.log(activityAward);
-        // this.configAward(activeId,moduleId,typeId,activityAward);
+        this.configAward(activeId,moduleId,typeId,activityAward);
       }, // 确定
       resetForm() {
-        console.log(this.value);
+        console.log(this.tableData);
+        this.tableData.map(item => {
+          // delete item.id
+        });
+        console.log(this.tableData);
       }, // 取消
       deleteRow(index, rows) {
         rows.splice(index, 1);
@@ -114,9 +124,9 @@
         const id = '奖品' + parseInt(this.tableData.length + 1);
         let obj = {
           id,
-          award_id: '',
+          award_id: this.id,
           name: '',
-          category_id: '',
+          category_id: this.category_id,
           category_name: '',
           number: 0,
           signed_type: 1
@@ -136,7 +146,9 @@
           if (this.tableData === "") {
             this.tableData = []
           }
-          console.log(this.tableData);
+          this.category_id = result.content[0].category_id;
+          this.id = result.content[0].id;
+          // console.log(this.tableData);
         }
       },
       async configAward (activeId,moduleId,moduleType,activityAward) {

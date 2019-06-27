@@ -1,7 +1,9 @@
 import axios from 'axios';
+const baseURL = "https://etivities-czytest.colourlife.com";
+
 // 获取活动模块列表
 export const reqActiveModuleLists = (activity_id) => {
-  return axios.get('/backend/module/list',{
+  return axios.get(`${baseURL}/backend/module/list`,{
     params: {
       adminId: '3',
       adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
@@ -12,7 +14,7 @@ export const reqActiveModuleLists = (activity_id) => {
 
 // 新建活动模块
 export const reqCreateActiveModule = (activity_id, name, type_id) => {
-  return axios.post('/backend/module/create',{
+  return axios.post(`${baseURL}/backend/module/create`,{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
     activity_id,
@@ -23,7 +25,7 @@ export const reqCreateActiveModule = (activity_id, name, type_id) => {
 
 // 获取活动模块类型列表
 export const reqModuleTypeList = () => {
-  return axios.get('/backend/module/type/list',{
+  return axios.get(`${baseURL}/backend/module/type/list`,{
     params: {
       adminId: '3',
       adminToken:'bc4f4018a91aaaad7eb78327ee6d2949'
@@ -33,7 +35,7 @@ export const reqModuleTypeList = () => {
 
 // 上传用户限制包
 export const reqUserPackageUpload = (module_id, file) => {
-  return axios.post('/backend/user/package/upload',{
+  return axios.post(`${baseURL}/backend/user/package/upload`,{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
     module_id,
@@ -46,7 +48,7 @@ export const reqConfigModule = (activity_id, module_id, name, start_at, end_at,d
                                 number_weekly,number_total,limit_type,limit_register_time,limit_login_time,
                                 limit_no_login_time,has_limit_user_package,has_limit_signed
 ) => {
-  return axios.post('/backend/module/edit',{
+  return axios.post(`${baseURL}/backend/module/edit`,{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
     activity_id,  // 活动ID
@@ -69,7 +71,7 @@ export const reqConfigModule = (activity_id, module_id, name, start_at, end_at,d
 
 // 获取活动奖品列表
 export const reqActiveAwardLists = (activity_id) => {
-  return axios.get('/backend/award/list',{
+  return axios.get(`${baseURL}/backend/award/list`,{
     params: {
       adminId: '3',
       adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
@@ -80,7 +82,7 @@ export const reqActiveAwardLists = (activity_id) => {
 
 // 配置模块奖品
 export const reqConfigPackageAward = (activity_id, module_id,module_type,activity_award) => {
-  return axios.post('/backend/module/award/set',{
+  return axios.post(`${baseURL}/backend/module/award/set`,{
     adminId: '3',
     adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
     activity_id,
