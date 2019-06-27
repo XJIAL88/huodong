@@ -5,7 +5,7 @@
                     :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
             <el-table-column label="奖品ID" width="200" align="center">
               <template slot-scope="scope">
-                <div v-model="scope.row.id">{{scope.row.id}}</div>
+                <div>{{scope.row.award_id}}</div>
                 <!--<el-input v-model="scope.row.category_name" placeholder="请输入" type="string" @blur="categoryInfo(scope.row.category_name)"></el-input>-->
               </template>
             </el-table-column>
@@ -86,7 +86,7 @@
         isClick: true,
         isShow: false,  // 是否显示签到类型和签到次数
         activityAward: [],
-        sign_num: 0,  // 签到次数
+        sign_num: 1,  // 签到次数
         category_name: "",  // 资源类型
         name: '', // 劵
         award_number: 0, // 发放数量
@@ -100,36 +100,34 @@
       }, // 上一步
       submitForm() {
         const {activeId, moduleId, typeId} = this.$route.query;
-        // [{"award_id":"45", "name":"券", "category_id":"6","category_name":"彩之云优惠券", "number":"1","signed_type":"1"}],
-        // this.activityAward = [{award_id:'45', name: this.name, category_id: '6', category_name: this.category_name}];
-        const activityAward = JSON.stringify(this.tableData);
-        this.tableData.map(item => {
-          // delete item.id
-          delete item.id
-        });
+        const arr = this.tableData.map(item => {
+          delete item.award_number;
+          return item
+        });  // 删除数组里的award_number属性
+        const activityAward = JSON.stringify(arr); // json转换
         console.log(activityAward);
         this.configAward(activeId,moduleId,typeId,activityAward);
       }, // 确定
       resetForm() {
         console.log(this.tableData);
-        this.tableData.map(item => {
-          // delete item.id
+        const arr = this.tableData.map(item => {
+          delete item.award_number;
+          return this.tableData
         });
-        console.log(this.tableData);
+        console.log(arr);
       }, // 取消
       deleteRow(index, rows) {
         rows.splice(index, 1);
       }, // 删除奖品
       addItem() {
-        const id = '奖品' + parseInt(this.tableData.length + 1);
-        let obj = {
-          id,
+        // const id = '奖品' + parseInt(this.tableData.length + 1);
+        const obj = {
           award_id: this.id,
           name: '',
           category_id: this.category_id,
           category_name: '',
-          number: 0,
-          signed_type: 1
+          number: 1,
+          signed_type: "1"
         };
         this.tableData.push(obj);
 
@@ -140,9 +138,30 @@
       }, // 添加商品
       async awardList (activity_id) {
         const result = await reqActiveAwardLists(activity_id);
-        // console.log(result);
+        console.log(result);
         if (result.code === 0) {
-          this.tableData = result.content;
+          const obj ={
+            award_id: result.content[0].id,
+            name: result.content[0].name,
+            award_number: result.content[0].award_number,
+            category_id: result.content[0].category_id,
+            category_name: result.content[0].category_name,
+            number: 1,
+            signed_type: "1"
+          };
+          result.content.map((item,index) => {
+            const obj = {
+              award_id: result.content[index].id,
+              name: result.content[index].name,
+              award_number: result.content[index].award_number,
+              category_id: result.content[index].category_id,
+              category_name: result.content[index].category_name,
+              number: 1,
+              signed_type: "1"
+            };
+            this.tableData.push(obj);
+          });
+          // this.tableData = result.content;
           if (this.tableData === "") {
             this.tableData = []
           }
