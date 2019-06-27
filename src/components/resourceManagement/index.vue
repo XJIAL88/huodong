@@ -34,12 +34,14 @@
             <!--奖品列表-->
             <template style='margin-top: 20px;'>
               <el-table :data="tableData" stripe style="width: 100%" max-width='1200'>
-                <el-table-column prop="date" label="资源类型" width="190" align='center'></el-table-column>
+                <el-table-column prop="resource_name" label="资源名称" width="190" align='center'></el-table-column>
+                <el-table-column prop="category_id" label="资源id" width="190" align='center'></el-table-column>
+                <el-table-column prop="category_name" label="资源类型名称" width="190" align='center'></el-table-column>
                 <el-table-column prop="name" label="奖品名称" width="190" align='center'></el-table-column>
-                <el-table-column prop="address" label="奖品图片" width="190" align='center'></el-table-column>
-                <el-table-column prop="address" label="剩余" width="190" align='center'></el-table-column>
-                <el-table-column prop="address" label="已发放" width="190" align='center'></el-table-column>
-                <el-table-column prop="address" label="创建时间" width="190" align='center'></el-table-column>
+<!--                <el-table-column prop="image" label="奖品图片" width="190" align='center'></el-table-column>-->
+                <el-table-column prop="award_number" label="剩余" width="190" align='center'></el-table-column>
+                <el-table-column prop="resource_number" label="单个奖品需要资源数量" width="190" align='center'></el-table-column>
+                <el-table-column prop="create_at" label="创建时间" width="190" align='center'></el-table-column>
                 <el-table-column prop="address" label="操作" width="60" align='center'>
                   <template slot-scope="scope" class='btn'>
                     <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
@@ -130,13 +132,14 @@
 </template>
 
 <script>
-  import {awardset, prize, awardsetPrize, toConfigure} from "../../api"
+  import {awardList, awardset, awardsetPrize, prize, toConfigure} from "../../api"
 
   export default {
     name: "index",
     created() {
       this.getawardset();
       this.getPrize();
+      this.getawardList();
     },
     data() {
       return {
@@ -241,7 +244,7 @@
 
         let obj = {};
         let ary = this.activity;
-        obj = ary.find((item)=>{//这里的userList就是上面遍历的数据源
+        obj = ary.find((item) => {//这里的userList就是上面遍历的数据源
           return item.value === val;//筛选出匹配数据
         });
 
@@ -275,8 +278,8 @@
           obj.id = item.id;
           this.activity.push(obj);
         });
-        console.log(this.activity);
-        console.log(data);
+        // console.log(this.activity);
+        // console.log(data);
       },
 
       //=>新增奖品（获取活动资源列表）
@@ -313,6 +316,12 @@
         let data = await toConfigure(obj);
         console.log(obj);
         console.log(data);
+      },
+      //=>获取活动奖品池列表
+      async getawardList() {
+        let data = await awardList();
+        console.log(data);
+        this.tableData = data.content.list;
       }
     },
 
