@@ -9,15 +9,15 @@
       <div class="title">
         领礼包
       </div>
-      <el-tabs v-model="activeName" type="card" class="tab" :before-leave="stopTab" @tab-click="handleClick">
-        <el-tab-pane label="基础设置" name="first">
+      <el-tabs v-model="activeName" type="border-card" class="tab" :before-leave="stopTab" @tab-click="handleClick">
+        <el-tab-pane label="基础设置" name="first" disabled	>
           <baseSet :tab="tab"></baseSet>
         </el-tab-pane>
-        <el-tab-pane label="参与设置" name="second">
+        <el-tab-pane label="参与设置" name="second" disabled	>
           <joinSet :tab="tab" :moduleId="moduleId"></joinSet>
         </el-tab-pane>
-        <el-tab-pane label="奖品设置" name="third">
-          <prizeSet></prizeSet>
+        <el-tab-pane label="奖品设置" name="third" disabled	>
+          <prizeSet :tab="tab"></prizeSet>
         </el-tab-pane>
       </el-tabs>
     </div>

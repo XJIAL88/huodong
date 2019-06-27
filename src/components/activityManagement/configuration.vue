@@ -27,17 +27,11 @@
         </el-dialog>
       </div>
       <div class="list">
-        <div class="item" v-for="(item, index) in activeModuleLists" :key="index" @click="jump('/wanCommunity',item.name)">
+        <div class="item" v-for="(item, index) in activeModuleLists" :key="index" @click="jump('/wanCommunity',item.name,item.type_id,item.id)">
           <div class="item-img">
             <img src="../../assets/u806.png" height="32" width="32"/>
           </div>
           <span class="item-title">{{item.name}}</span>
-        </div>
-        <div class="item" @click="jump('/wanCommunity','万社区')">
-          <div class="item-img">
-            <img src="../../assets/u806.png" height="32" width="32"/>
-          </div>
-          <span class="item-title">万社区</span>
         </div>
       </div>
     </div>
@@ -46,8 +40,7 @@
 
 <script>
   import {UPDATE_NAME} from "../../vuex/mutation-types";
-  import {mapState} from 'vuex';
-  import {reqCreateActiveModule,reqModuleTypeList} from "../../api/api";
+  import {reqCreateActiveModule,reqModuleTypeList,reqActiveModuleLists} from "../../api/api";
 
   export default {
     data () {
@@ -70,13 +63,15 @@
         moduleTypeLists: [], // 模块类型列表
         activeId: 0,  // 活动ID
         moduleId: 0,  // 模块ID
+        activeModuleLists: [], // 活动模块列表
       }
     },
     methods: {
-      jump (path, activeName) {
+      jump (path, activeName, typeId, moduleId) {
+
         this.$store.commit(UPDATE_NAME, activeName);
-        const {activeId,moduleId} = this;
-        this.$router.push({path, query:{activeId,moduleId}});
+        const {activeId} = this;
+        this.$router.push({path, query:{activeId,moduleId,typeId}});
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -97,27 +92,44 @@
         this.$refs[formName].resetFields();
       },
       async createActiveModule (activeId, name, typeId) {
-        const result = await reqCreateActiveModule(activeId, name, typeId)
+        const result = await reqCreateActiveModule(activeId, name, typeId); // 新建活动模块
         if (result.code === 0) {
           this.moduleId = result.content;
+          const obj = {
+            name,
+            id: this.moduleId,
+            type_id: 1
+          };
+          this.activeModuleLists.push(obj)
+        } else {
+          this.$message({
+            message: result.message,
+            type: 'success'
+          });
         }
       },
       async moduleTypeList () {
-        const result = await reqModuleTypeList();
+        const result = await reqModuleTypeList();  // 获取活动模块类型列表
         if (result.code === 0) {
           this.moduleTypeLists = result.content;
+        }
+      },
+      async getActiveModuleLists (active_id) {
+        const result = await reqActiveModuleLists(active_id); // 获取活动模块列表
+        if (result.code === 0) {
+          this.activeModuleLists = result.content;
         }
       }
     },
     mounted() {
       this.activeId = this.$route.params.id;
-      this.$store.dispatch('getActiveModuleLists', this.activeId);
+      this.getActiveModuleLists(this.activeId);
       this.moduleTypeList();
     },
-    computed: {
-      ...mapState({
-        activeModuleLists : state => state.configuration.activeModuleLists
-      })
+    watch: {
+      'activeModuleLists' () {
+        this.$forceUpdate();
+      }
     }
   }
 </script>

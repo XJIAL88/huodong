@@ -21,7 +21,7 @@ export const reqCreateActiveModule = (activity_id, name, type_id) => {
   })
 };
 
-// 获取活动模块列表
+// 获取活动模块类型列表
 export const reqModuleTypeList = () => {
   return axios.get('/backend/module/type/list',{
     params: {
@@ -66,3 +66,27 @@ export const reqConfigModule = (activity_id, module_id, name, start_at, end_at,d
     has_limit_signed // 是否设置签到
   })
 };
+
+// 获取活动奖品列表
+export const reqActiveAwardLists = (activity_id) => {
+  return axios.get('/backend/award/list',{
+    params: {
+      adminId: '3',
+      adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
+      activity_id,
+    }
+  })
+};
+
+// 配置模块奖品
+export const reqConfigPackageAward = (activity_id, module_id,module_type,activity_award) => {
+  return axios.post('/backend/module/award/set',{
+    adminId: '3',
+    adminToken:'bc4f4018a91aaaad7eb78327ee6d2949',
+    activity_id,
+    module_id,
+    module_type,
+    activity_award
+  })
+};
+

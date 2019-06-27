@@ -91,6 +91,7 @@
       </el-input>
     </el-form-item>
     <el-form-item>
+      <el-button type="primary" @click="prevStep">上一步</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
     </el-form-item>
   </el-form>
@@ -135,14 +136,13 @@
         limitRegisterTime: [],  // 限制注册时间
         limitLoginTime: [],  // 限制登录时间
         limitNoLoginTime: [],  // 限制未登录时间
-        joinConditionValue: 1, // 是否设置需要签到，1不需要，2需要
+        joinConditionValue: 2, // 是否设置需要签到，1不需要，2需要
         userPackage: 1,  // 是否上传用户限制包，1未上传，2 有上传
       }
     },
     methods: {
       async uploadSectionFile (file) {
         const result = await reqUserPackageUpload(this.$route.query.moduleId,file.file.type);
-        console.log(result);
         if (result.code === 0) {
           this.userPackage = 2
         }
@@ -153,25 +153,36 @@
       beforeUpload(file) {
         this.file = file.type
       },
+      prevStep () {
+        this.tab('first');
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.form.registeredTime.length !== 0) {
-              limit_register_time = JSON.stringify([{time: this.form.registeredTime[0] + ',' + this.form.registeredTime[1]}]);
-              this.limitType.push(2)
+              this.limitRegisterTime = JSON.stringify([{time: this.form.registeredTime[0] + ',' + this.form.registeredTime[1]}]);
+              if (this.limitType instanceof Array) {
+                this.limitType.push(2)
+              }
             }
             if (this.form.loginTime.length !== 0) {
-              limit_register_time = JSON.stringify([{time: this.form.loginTime[0] + ',' + this.form.loginTime[1]}]);
-              this.limitType.push(3)
+              this.limitRegisterTime = JSON.stringify([{time: this.form.loginTime[0] + ',' + this.form.loginTime[1]}]);
+              if (this.limitType instanceof Array) {
+                this.limitType.push(3)
+              }
             }
             if (this.form.unLoginTime.length !== 0) {
-              limit_register_time = JSON.stringify([{time: this.form.unLoginTime[0] + ',' + this.form.unLoginTime[1]}]);
-              this.limitType.push(4)
+              this.limitRegisterTime = JSON.stringify([{time: this.form.unLoginTime[0] + ',' + this.form.unLoginTime[1]}]);
+              if (this.limitType instanceof Array) {
+                this.limitType.push(4)
+              }
             }
             if (this.limitType.length === 0) {
               this.limitType.push(1)
             }
-            this.limitType = this.limitType.join(',');
+            if (this.limitType instanceof Array) {
+              this.limitType = this.limitType.join(',');
+            }
             const activity_id = this.$route.query.activeId;  // 活动ID
             const module_id = this.$route.query.moduleId;  // 模块ID
             const {name} = this.firstForm;  // 模块名称
@@ -181,13 +192,12 @@
             const number_daily = this.dayNum;  // 每日可参加次数
             const number_weekly = this.weekNum;  // 每周可参加次数
             const number_total = this.allNum;  // 总共可参加次数
-            let limit_type = this.limitType;  // 限制类型
-            let limit_register_time = this.limitRegisterTime; // 限制注册时间
+            const limit_type = this.limitType;  // 限制类型
+            const limit_register_time = this.limitRegisterTime; // 限制注册时间
             const limit_login_time = this.limitLoginTime; // 限制登录时间
             const limit_no_login_time = this.limitNoLoginTime; // 限制未登录时间
             const has_limit_user_package = this.userPackage; // 是否上传用户限制包
             const has_limit_signed = this.joinConditionValue;  // 是否设置签到
-
 
             this.tab('third');
             this.configModule(activity_id, module_id, name, start_at, end_at,desc,number_daily, number_weekly,number_total,limit_type,limit_register_time,limit_login_time, limit_no_login_time,has_limit_user_package,has_limit_signed)
@@ -200,7 +210,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.joinCondition = false;
-            this.$refs[formName].resetFields();
+            // this.$refs[formName].resetFields();
           } else {
             return false;
           }
@@ -208,7 +218,7 @@
       },  // 确定
       resetForm(formName) {
         this.joinCondition = false;
-        this.$refs[formName].resetFields();
+        // this.$refs[formName].resetFields();
       },  // 取消
       limit(type) {
         if (type === '不限制') {
@@ -224,21 +234,23 @@
         }
       },
       joinCond(type) {
-        if (type === '无') {
-          this.joinConditionValue = 1
-        } else if(type === '签到'){
-          this.joinConditionValue = 2
-        } else{
-          this.joinConditionValue = 1
+        if (type === '签到') {
+          this.joinConditionValue = 2;
+          PubSub.publish("joinSet",{
+            isSign: true
+          })
+        } else {
+          this.joinConditionValue = 1;
+          PubSub.publish("joinSet",{
+            isSign: false
+          })
         }
       },
       async configModule (activity_id, module_id, name, start_at, end_at,desc,number_daily, number_weekly,number_total,limit_type,limit_register_time,limit_login_time, limit_no_login_time,has_limit_user_package,has_limit_signed) {
         const result = await reqConfigModule(activity_id, module_id, name, start_at, end_at,desc,number_daily, number_weekly,number_total,limit_type,limit_register_time,limit_login_time, limit_no_login_time,has_limit_user_package,has_limit_signed);
         if (result.code === 0) {
           this.moduleTypeId = result.content;
-          console.log(111);
         }
-        console.log(result);
       }
     },
     created () {
