@@ -32,36 +32,16 @@
     <el-row style='margin-top: 20px;'>
       <el-col :span="24">
         <div class='title' style='margin-bottom: 20px;'>活动奖品：</div>
-        <el-table :data="tableData" align='center' border style="width: 100%;max-width: 1200px;">
-          <el-table-column
-            prop="date"
-            label="资源类型"
-            align='center'
-            width="240">
+        <el-table :data="tableData" align='center' border style="width: 100%;">
+          <el-table-column prop="date" label="资源类型" align='center'>
           </el-table-column>
-          <el-table-column
-            prop="name"
-            label="奖品名称"
-            align='center'
-            width="240">
+          <el-table-column prop="name" label="奖品名称" align='center'>
           </el-table-column>
-          <el-table-column
-            width="240"
-            align='center'
-            prop="address"
-            label="剩余">
+          <el-table-column align='center' prop="address" label="剩余">
           </el-table-column>
-          <el-table-column
-            width="240"
-            align='center'
-            prop="address"
-            label="已发放">
+          <el-table-column align='center' prop="address" label="已发放">
           </el-table-column>
-          <el-table-column
-            width="240"
-            align='center'
-            prop="address"
-            label="已使用">
+          <el-table-column align='center' prop="address" label="已使用">
           </el-table-column>
         </el-table>
       </el-col>
@@ -130,38 +110,12 @@
         <el-col :span="24">
           <div class='title' style='margin-bottom: 20px;'>奖品：</div>
           <el-table :data="tableData" border style="width: 100%">
-            <el-table-column
-              align='center'
-              prop="date"
-              label="奖品类别"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="资源类型"
-              align='center'
-              width="180">
-            </el-table-column>
-            <el-table-column
-              align='center'
-              prop="address"
-              label="奖品">
-            </el-table-column>
-            <el-table-column
-              align='center'
-              prop="address"
-              label="发放数量">
-            </el-table-column>
-            <el-table-column
-              align='center'
-              prop="address"
-              label="每日上限（数量）">
-            </el-table-column>
-            <el-table-column
-              align='center'
-              prop="address"
-              label="发放时间">
-            </el-table-column>
+            <el-table-column align='center' prop="date" label="奖品类别"></el-table-column>
+            <el-table-column prop="name" label="资源类型" align='center'></el-table-column>
+            <el-table-column align='center' prop="address" label="奖品"></el-table-column>
+            <el-table-column align='center' prop="address" label="发放数量"></el-table-column>
+            <el-table-column align='center' prop="address" label="每日上限（数量）"></el-table-column>
+            <el-table-column align='center' prop="address" label="发放时间"></el-table-column>
           </el-table>
         </el-col>
       </el-row>

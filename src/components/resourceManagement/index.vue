@@ -33,16 +33,16 @@
           <el-tab-pane label="奖品列表" name="first">
             <!--奖品列表-->
             <template style='margin-top: 20px;'>
-              <el-table :data="tableData" stripe style="width: 100%" max-width='1200'>
-                <el-table-column prop="resource_name" label="资源名称" width="190" align='center'></el-table-column>
-                <el-table-column prop="category_id" label="资源id" width="190" align='center'></el-table-column>
-                <el-table-column prop="category_name" label="资源类型名称" width="190" align='center'></el-table-column>
-                <el-table-column prop="name" label="奖品名称" width="190" align='center'></el-table-column>
-<!--                <el-table-column prop="image" label="奖品图片" width="190" align='center'></el-table-column>-->
-                <el-table-column prop="award_number" label="剩余" width="190" align='center'></el-table-column>
+              <el-table :data="tableData" stripe style="width: 100%">
+                <el-table-column prop="resource_name" label="资源名称" align='center'></el-table-column>
+                <el-table-column prop="category_id" label="资源id" align='center'></el-table-column>
+                <el-table-column prop="category_name" label="资源类型名称" align='center'></el-table-column>
+                <el-table-column prop="name" label="奖品名称" align='center'></el-table-column>
+                <!--                <el-table-column prop="image" label="奖品图片" width="190" align='center'></el-table-column>-->
+                <el-table-column prop="award_number" label="剩余" align='center'></el-table-column>
                 <el-table-column prop="resource_number" label="单个奖品需要资源数量" width="190" align='center'></el-table-column>
-                <el-table-column prop="create_at" label="创建时间" width="190" align='center'></el-table-column>
-                <el-table-column prop="address" label="操作" width="60" align='center'>
+                <el-table-column prop="create_at" label="创建时间" align='center'></el-table-column>
+                <el-table-column prop="address" label="操作" align='center'>
                   <template slot-scope="scope" class='btn'>
                     <el-tooltip class="item" effect="dark" content="编辑" placement="bottom">
                       <el-button type="text" icon="el-icon-edit"></el-button>
@@ -56,11 +56,11 @@
             <!--资源列表-->
             <template style='margin-top: 20px; max-width: 1200px;'>
               <el-table :data="resources" stripe style="width: 100%;">
-                <el-table-column prop="id" label="资源ID" width="240" align='center'></el-table-column>
-                <el-table-column prop="resourceName" label="资源名称" width="240" align='center'></el-table-column>
-                <el-table-column prop="activityName" label="活动名称" width="240" align='center'></el-table-column>
-                <el-table-column prop="number" label="总数" width="240" align='center'></el-table-column>
-                <el-table-column prop="usedNumber" label="已使用" width="240" align='center'></el-table-column>
+                <el-table-column prop="id" label="资源ID" align='center'></el-table-column>
+                <el-table-column prop="resourceName" label="资源名称" align='center'></el-table-column>
+                <el-table-column prop="activityName" label="活动名称" align='center'></el-table-column>
+                <el-table-column prop="number" label="总数" align='center'></el-table-column>
+                <el-table-column prop="usedNumber" label="已使用" align='center'></el-table-column>
               </el-table>
               <footer class="footer">
                 <el-row>
@@ -125,7 +125,7 @@
       </el-row>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button type="primary" @click="submit" @close="'closeDialog'">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -254,6 +254,9 @@
       submit() {
         this.dialogFormVisible = false;
         this.gettoConfigure();
+      },
+      closeDialog(done) {
+        console.log('done')
       },
 
       //====请求接口====

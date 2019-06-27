@@ -49,12 +49,12 @@
               row-key="id"
               default-expand-all
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-              <el-table-column prop="id" label="活动id" align='center' sortable width="200"></el-table-column>
-              <el-table-column prop="name" label="活动名称" align='center' width="200"></el-table-column>
-              <el-table-column prop="start_at" label="开始时间" align='center' width="200"></el-table-column>
-              <el-table-column prop="end_at" label="结束时间" align='center' width="200"></el-table-column>
-              <el-table-column prop="create_at" label="创建时间" align='center' width="200"></el-table-column>
-              <el-table-column prop="status" align='center' label="活动状态" width="200">
+              <el-table-column prop="id" label="活动id" align='center' sortable ></el-table-column>
+              <el-table-column prop="name" label="活动名称" align='center' ></el-table-column>
+              <el-table-column prop="start_at" label="开始时间" align='center'></el-table-column>
+              <el-table-column prop="end_at" label="结束时间" align='center' ></el-table-column>
+              <el-table-column prop="create_at" label="创建时间" align='center' ></el-table-column>
+              <el-table-column prop="status" align='center' label="活动状态">
                 <template slot-scope="scope">
                   <el-tag disable-transitions>{{scope.row.status |statusFil}}</el-tag>
                 </template>
