@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" v-loading.fullscreen.lock="fullscreenLoading">
     <div class="content" style="margin-top: 20px;">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-row>
@@ -132,7 +132,7 @@
 </template>
 
 <script>
-  import {awardList, awardset, awardsetPrize, prize, toConfigure} from "../../api"
+  import {awardset, awardsetPrize, prize, toConfigure, awardList} from "../../api"
 
   export default {
     name: "index",
@@ -152,6 +152,8 @@
         input: '',
         dialogTableVisible: false,
         dialogFormVisible: false,
+        //=>loading
+        fullscreenLoading: true,
         form: {
           name: '',
           region: '',
@@ -319,12 +321,24 @@
         let data = await toConfigure(obj);
         console.log(obj);
         console.log(data);
+        let msg = data.message;
+
+        this.$alert(msg, '很抱歉', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: '新增奖品失败！！'
+            });
+          }
+        });
       },
+
       //=>获取活动奖品池列表
       async getawardList() {
         let data = await awardList();
-        console.log(data);
         this.tableData = data.content.list;
+        this.fullscreenLoading = false;
       }
     },
 

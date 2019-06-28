@@ -169,9 +169,6 @@
         this.query.now_page = val;
         this.getList();
       },
-      filterTag(value, row) {
-        return row.tag === value;
-      },
       async upload(id, num) {
         let data = await update(id, num);
         if (data.code === 0 && num === 3) {

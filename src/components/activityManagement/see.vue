@@ -33,16 +33,11 @@
       <el-col :span="24">
         <div class='title' style='margin-bottom: 20px;'>活动奖品：</div>
         <el-table :data="tableData" align='center' border style="width: 100%;">
-          <el-table-column prop="date" label="资源类型" align='center'>
-          </el-table-column>
-          <el-table-column prop="name" label="奖品名称" align='center'>
-          </el-table-column>
-          <el-table-column align='center' prop="address" label="剩余">
-          </el-table-column>
-          <el-table-column align='center' prop="address" label="已发放">
-          </el-table-column>
-          <el-table-column align='center' prop="address" label="已使用">
-          </el-table-column>
+          <el-table-column prop="name" label="奖品名称" align='center'></el-table-column>
+          <el-table-column prop="activity_name" label="活动名称" align='center'></el-table-column>
+          <el-table-column prop="category_name" label="资源类型" align='center'></el-table-column>
+          <el-table-column prop="award_number" align='center'  label="剩余"></el-table-column>
+          <el-table-column align='center' prop="resource_number" label="单个奖品消耗资源数量"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -76,7 +71,7 @@
       <el-row style='margin-top: 20px;'>
         <el-col :span="24">
           <div class='title' style='margin-bottom: 20px;'>活动规则：</div>
-          <el-input type="textarea"  v-model="desc" maxlength="1000" show-word-limit rows=8></el-input>
+          <el-input type="textarea" v-model="desc" maxlength="1000" show-word-limit rows=8></el-input>
         </el-col>
       </el-row>
       <el-row style='margin-top: 20px;'>
@@ -128,7 +123,7 @@
   </div>
 </template>
 <script>
-  import {detail, activity} from "../../api";
+  import {detail, activity, prizeList} from "../../api";
 
   export default {
     name: "see",
@@ -137,6 +132,7 @@
         number = this.$route.params.number;
       this.getdetail(num);
       this.getactivity(num, number);
+      this.getprizeList(num);
 
     },
     data() {
@@ -183,8 +179,17 @@
       async getactivity(a, b) {
         let data = await activity(a, b);
         console.log(data);
+      },
+
+      //=>获取活动奖品列表
+      async getprizeList(num) {
+        let data = await prizeList(num);
+        this.tableData = data.content;
+        console.log(data);
       }
+
     },
+
     filters: {
       status(tag) {
         switch (tag) {

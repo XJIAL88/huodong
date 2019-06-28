@@ -105,7 +105,6 @@ export let awardset = (obj) => {
 //=>获取活动资源列表（新增奖品）
 export let awardsetPrize = (obj) => {
   let {number} = obj;
-  console.log(number)
   return axios.get(`${baseURL}/backend/resource/activity/list`, {
     params: {
       adminId: '3',
@@ -148,10 +147,21 @@ export let toConfigure = (obj) => {
 
 //=>新增奖品
 export let awardList = () => {
-  return axios.get('/backend/activity/award/list', {
+  return axios.get(`${baseURL}/backend/activity/award/list`, {
     params: {
       adminId: '3',
       adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+    },
+  })
+};
+
+//=>获取活动奖品列表
+export let prizeList = (num) => {
+  return axios.get(`${baseURL}/backend/award/list`, {
+    params: {
+      adminId: '3',
+      adminToken: 'bc4f4018a91aaaad7eb78327ee6d2949',
+      activity_id:num
     },
   })
 };
