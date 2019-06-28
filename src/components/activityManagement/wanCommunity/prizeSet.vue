@@ -109,12 +109,7 @@
         this.configAward(activeId,moduleId,typeId,activityAward);
       }, // 确定
       resetForm() {
-        console.log(this.tableData);
-        const arr = this.tableData.map(item => {
-          delete item.award_number;
-          return this.tableData
-        });
-        console.log(arr);
+        this.$router.replace('/index');
       }, // 取消
       deleteRow(index, rows) {
         rows.splice(index, 1);
@@ -138,18 +133,8 @@
       }, // 添加商品
       async awardList (activity_id) {
         const result = await reqActiveAwardLists(activity_id);
-        console.log(result);
         if (result.code === 0) {
-          const obj ={
-            award_id: result.content[0].id,
-            name: result.content[0].name,
-            award_number: result.content[0].award_number,
-            category_id: result.content[0].category_id,
-            category_name: result.content[0].category_name,
-            number: 1,
-            signed_type: "1"
-          };
-          result.content.map((item,index) => {
+          result.content.map((item,index) => { // 遍历返回的数组，创建相应的对象
             const obj = {
               award_id: result.content[index].id,
               name: result.content[index].name,
